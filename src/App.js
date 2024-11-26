@@ -1,12 +1,16 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import VenuePage from "./pages/VenuePage";
 
 function App() {
   return (
-    <div className="text-center mt-5">
-      <h1>Welcome to Holidaze</h1>
-      <Button variant="primary">Test Bootstrap Button</Button>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/venue/:id" element={<VenuePage />} />
+      </Routes>
+    </Router>
   );
 }
 
