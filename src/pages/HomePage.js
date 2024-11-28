@@ -1,9 +1,12 @@
 import React from "react";
+import VenuesList from "../components/VenuesList";
 
 function HomePage() {
   return (
     <div>
-      <h1>Welcome to Holidaze</h1>
+      <div>
+        <VenuesList />
+      </div>
     </div>
   );
 }
