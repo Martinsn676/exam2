@@ -257,6 +257,15 @@ function VenuePage() {
       </div>
 
       {descriptionString}
+      <div className="my-3">
+        <select className="form-select" onChange={handleDaysChange}>
+          {[...Array(7)].map((_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {i + 1} {i + 1 === 1 ? "night" : "nights"}
+            </option>
+          ))}
+        </select>
+      </div>
       <div ref={bookingSectionRef}>
         <h3 className="text-center">Check Availability</h3>
         <AvailabilityCalendar
