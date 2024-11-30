@@ -16,7 +16,9 @@ function VenuesList() {
   const [loading, setLoading] = useState(true); // Tracks loading state
   const [error, setError] = useState(null); // Stores errors if any
   const [search, setSearch] = useState("");
-  const [showAmount, setShowAmount] = useState(30); // Number of venues to display
+  const [showAmount, setShowAmount] = useState(
+    window.innerWidth > 500 ? 30 : 5
+  ); // Number of venues to display
   const location = useLocation();
   const navigate = useNavigate();
 

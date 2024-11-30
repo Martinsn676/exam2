@@ -10,16 +10,16 @@ function Footer() {
           <h4>Quick Links</h4>
           <ul>
             <li>
-              <a href="/about">About Us</a>
+              <a href="/">About Us</a>
             </li>
             <li>
-              <a href="/contact">Contact</a>
+              <a href="/">Contact</a>
             </li>
             <li>
-              <a href="/terms">Terms & Conditions</a>
+              <a href="/">Terms & Conditions</a>
             </li>
             <li>
-              <a href="/privacy">Privacy Policy</a>
+              <a href="/">Privacy Policy</a>
             </li>
           </ul>
         </div>
@@ -27,9 +27,9 @@ function Footer() {
         {/* Contact Information */}
         <div className="footer-section">
           <h4>Contact</h4>
-          <p>Email: info@hotelpage.com</p>
+          <p>Email: info@holidaze.com</p>
           <p>Phone: +1 (555) 123-4567</p>
-          <p>Address: 123 Hotel Street, Cityville, Country</p>
+          <p>Address: 123 Hotel Street, Cityville, USA</p>
         </div>
 
         {/* Social Media */}
@@ -37,19 +37,19 @@ function Footer() {
           <h4>Follow Us</h4>
           <ul className="social-media">
             <li>
-              <a href="https://facebook.com">Facebook</a>
+              <a href="/">Facebook</a>
             </li>
             <li>
-              <a href="https://twitter.com">Twitter</a>
+              <a href="/">Twitter</a>
             </li>
             <li>
-              <a href="https://instagram.com">Instagram</a>
+              <a href="/">Instagram</a>
             </li>
           </ul>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; 2024 HotelPage. All rights reserved.</p>
+        <p>&copy; 2024 Holidaze. All rights reserved.</p>
       </div>
     </footer>
   );

@@ -36,7 +36,7 @@ function CreateVenuePage() {
 
   const BASE_URL = "https://v2.api.noroff.dev";
   const VENUES_ENDPOINT = "/holidaze/venues";
-  const initialBookingsShow = 2;
+  const initialBookingsShow = 3;
 
   // Fetch venue details for editing
   useEffect(() => {

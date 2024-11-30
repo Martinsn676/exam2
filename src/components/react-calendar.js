@@ -20,7 +20,7 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
     const generateDateRange = () => {
       const start = new Date(); // Today's date
       const end = new Date();
-      end.setDate(start.getDate() + 90); // 90 days from today
+      end.setDate(start.getDate() + 180); // 180 days from today
 
       const dates = [];
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
