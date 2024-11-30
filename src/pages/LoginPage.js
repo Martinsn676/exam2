@@ -37,7 +37,7 @@ function LoginPage() {
       } else {
         const json = await response.json();
         setError("");
-        lsList.save("userLoginData", {
+        await lsList.save("userLoginData", {
           accessToken: json.data.accessToken,
           name: json.data.name,
         });

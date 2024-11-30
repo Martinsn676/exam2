@@ -6,7 +6,7 @@ import Header from "./components/header";
 import "./styles/main.scss";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
-import CreateVenuePage from "./pages/CreateVenuePage";
+import VenueManagerPage from "./pages/VenueManagerPage";
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
@@ -30,7 +30,7 @@ function App() {
           <Route path="/venue/:id" element={<VenuePage />} />
           <Route path="/profile-page" element={<ProfilePage />} />
           <Route path="/login-page" element={<LoginPage />} />
-          <Route path="/create-venue" element={<CreateVenuePage />} />
+          <Route path="/manage-venue/:id" element={<VenueManagerPage />} />
         </Routes>
       </main>
     </Router>

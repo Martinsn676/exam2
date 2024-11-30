@@ -5,7 +5,7 @@ import "react-calendar/dist/Calendar.css"; // Calendar styles
 import { lsList } from "../utils/lists";
 const baseUrl = "https://v2.api.noroff.dev";
 
-function AvailabilityCalendar({ takenDates, days, price, id }) {
+function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
   const [availableDates, setAvailableDates] = useState([]);
   const [dateConfirmationString, setDateConfirmationString] = useState(null); // Store the selected check-in date
   const [selectedDates, setSelectedDates] = useState(null); // Store the selected dates for confirmation
@@ -82,12 +82,13 @@ function AvailabilityCalendar({ takenDates, days, price, id }) {
     setSelectedDates({ start: selected, end: formattedEndDate });
 
     setDateConfirmationString(
-      <div className="d-flex flex-column align-items-center p-3 border rounded shadow-sm bg-light">
-        <div className="mb-2 text-primary">
-          <strong>Stay Duration:</strong> From {selected} to {formattedEndDate}{" "}
-          ({days} nights)
+      <div className="d-flex flex-column align-items-center p-3">
+        <div className="mb-2">
+          From <strong>{selected}</strong> to{" "}
+          <strong>{formattedEndDate}</strong> ({days}{" "}
+          {days > 1 ? "nights" : "night"})
         </div>
-        <div className="fs-5 text-success">
+        <div className="fs-5">
           <strong>Total Price:</strong> {Number(price) * days}$
         </div>
       </div>
@@ -96,7 +97,7 @@ function AvailabilityCalendar({ takenDates, days, price, id }) {
 
   const handleConfirmBooking = async () => {
     console.log("Booking Confirmed:", selectedDates);
-    const userDetails = await lsList.get("userData");
+    const userLoginData = await lsList.get("userLoginData");
     const body = {
       dateFrom: selectedDates.start, // Required - Instance of new Date()
       dateTo: selectedDates.end, // Required - Instance of new Date()
@@ -109,7 +110,7 @@ function AvailabilityCalendar({ takenDates, days, price, id }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userDetails.accessToken}`, // Add token for authorization
+          Authorization: `Bearer ${userLoginData.accessToken}`, // Add token for authorization
           "X-Noroff-API-Key": "d6d527ca-f857-47b0-88e5-f8eb71230766",
         },
         body: JSON.stringify(body),
@@ -151,12 +152,24 @@ function AvailabilityCalendar({ takenDates, days, price, id }) {
       {dateConfirmationString && (
         <div className="mt-3 text-center">
           {dateConfirmationString}
-          <button
-            className="btn btn-primary mt-3"
-            onClick={handleConfirmBooking} // Handle booking confirmation
-          >
-            Confirm Booking
-          </button>
+          {signedInUser ? (
+            <button
+              className="btn btn-primary mt-3"
+              onClick={handleConfirmBooking} // Handle booking confirmation
+            >
+              Confirm Booking
+            </button>
+          ) : (
+            <div className="d-flex flex-column align-items-center">
+              <span>Please sign in to place your booking</span>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={() => navigate("/login-page")} // Handle booking confirmation
+              >
+                Sign in
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

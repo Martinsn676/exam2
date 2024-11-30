@@ -129,7 +129,7 @@ const ProfilePage = () => {
     navigate("/login-page"); // Redirect to login page
   };
   const addNewVenue = () => {
-    navigate("/create-venue"); // Redirect to login page
+    navigate("/manage-venue/new"); // Redirect to login page
   };
   const normalizeDate = (date) => {
     // Split the input date into date and time parts
@@ -153,21 +153,27 @@ const ProfilePage = () => {
     <div className="container mt-5 d-flex flex-column align-items-center">
       <div className="headline">
         <h1>Welcome, {userDetails.name}</h1>
-        <span className="grey-text lemon-font manager-text">Manager View</span>
+        {userDetails.venueManager && (
+          <span className="grey-text lemon-font manager-text">
+            Manager View
+          </span>
+        )}
       </div>
 
       {/* Avatar Section */}
-      <div
-        className="avatar-image-container"
-        onClick={() => setIsPopupOpen(true)}
-      >
-        <img
-          className="avatar-image"
-          src={userDetails.avatar.url}
-          alt="User avatar"
-        />
-        <img className="edit-icon" src={editIcon} alt="Edit icon" />
-      </div>
+      {!userDetails.venueManager && (
+        <div
+          className="avatar-image-container"
+          onClick={() => setIsPopupOpen(true)}
+        >
+          <img
+            className="avatar-image"
+            src={userDetails.avatar.url}
+            alt="User avatar"
+          />
+          <img className="edit-icon" src={editIcon} alt="Edit icon" />
+        </div>
+      )}
 
       {/* Conditional Rendering for Venues or Bookings */}
       <div className="mt-4">
@@ -183,10 +189,10 @@ const ProfilePage = () => {
               </button>
             </div>
             {venues && venues.length > 0 ? (
-              <div className="venues-list">
+              <div className="venues-list mt-4">
                 {venues.map((venue, index) => (
                   <Link
-                    to={`/venue/${venue.id}`}
+                    to={`/manage-venue/${venue.id}`}
                     key={index}
                     className="text-decoration-none text-black"
                   >
@@ -211,9 +217,7 @@ const ProfilePage = () => {
                       {/* Details Section */}
                       <div className="venue-details">
                         <h5 className="mb-2">{venue.name || "Venue Name"}</h5>
-                        <p className="mb-1">
-                          <strong>Location:</strong> {venue.location || "N/A"}
-                        </p>
+
                         <p className="mb-0">
                           <strong>Price:</strong> ${venue.price || "N/A"} /
                           night

@@ -8,6 +8,7 @@ import mapMarker from "../icons/MapIcon.png"; // Import the image
 import breakfastIcon from "../icons/Breakfast.png"; // Import the image
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import placeHolders from "../asserts/placeHolders";
+import { lsList } from "../utils/lists";
 // import ReservationCalendar from "../components/reservationCalendar";
 const baseUrl = "https://v2.api.noroff.dev/";
 const venuesUrl = "holidaze/venues";
@@ -18,6 +19,8 @@ function VenuePage() {
   const [venueDetails, setVenueDetails] = useState([]); // State for taken dates
   const [loading, setLoading] = useState(true); // State for loading status
   const [error, setError] = useState(null); // State for error handling
+  const [signedInUser, setSignedInUser] = useState(false);
+
   const bookingSectionRef = useRef(null);
 
   const scrollToBooking = () => {
@@ -28,20 +31,28 @@ function VenuePage() {
   const handleDaysChange = (e) => {
     const value = parseInt(e.target.value, 10); // Convert the selected value to a number
     setSelectedDays(value); // Update the state
-    console.log("Selected Duration:", value);
   };
+  useEffect(() => {
+    // Run the user check and then fetch additional details
+    const initialize = async () => {
+      const userData = await lsList.get("userData");
+      console.log("userData", userData);
+      if (userData && !userData.venueManager) {
+        setSignedInUser(true);
+      }
+      console.log(signedInUser);
+    };
 
+    initialize(); // Run the initialization process
+  }, []);
   useEffect(() => {
     const fetchVenue = async () => {
       try {
-        const response = await fetch(
-          `${baseUrl}${venuesUrl}/${id}?_bookings=true&_owner=true`
-        ); // API call with id
+        const response = await fetch(`${baseUrl}${venuesUrl}/${id}`); // API call with id
         if (!response.ok) {
           throw new Error("Failed to fetch venue details");
         }
         const venue = await response.json();
-        console.log("Fetched venue:", venue);
 
         // Extract bookings and convert them to taken dates
         const bookings = venue.data.bookings || [];
@@ -59,7 +70,7 @@ function VenuePage() {
           }
           return dates;
         });
-        console.log("extractedDates", extractedDates);
+
         setTakenDates(extractedDates);
         setVenueDetails(venue.data);
       } catch (err) {
@@ -128,8 +139,7 @@ function VenuePage() {
       return null; // Return null for keys not in shortInfoSettings
     }
   );
-  console.log("shortInfoHtml", shortInfoHtml);
-  console.log("venueDetails.location", venueDetails.location);
+
   const addressString = (
     <div className="p-1 short-description" key="Location">
       <img src={mapMarker} alt="Map marker icon" />
@@ -159,8 +169,7 @@ function VenuePage() {
         : placeHolders.description}
     </div>
   );
-  console.log("takenDates", takenDates);
-
+  console.log("signedIn", signedInUser);
   return (
     <div className="p-5">
       {/* Venue Name */}
@@ -230,6 +239,7 @@ function VenuePage() {
           days={selectedDays}
           price={venueDetails.price}
           id={venueDetails.id}
+          signedInUser={signedInUser}
         />
       </div>
     </div>
