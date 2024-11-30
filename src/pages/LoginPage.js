@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { lsList } from "../hooks/lists";
+
 const baseUrl = "https://v2.api.noroff.dev";
 
 function LoginPage() {
@@ -13,32 +14,21 @@ function LoginPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Validation function
+  // Validate form inputs
   const validateInputs = () => {
-    if (!email.trim()) {
-      return "Email is required.";
-    }
+    if (!email.trim()) return "Email is required.";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return "Please enter a valid email address.";
-    }
-    if (!password.trim()) {
-      return "Password is required.";
-    }
+    if (!emailRegex.test(email)) return "Please enter a valid email address.";
+    if (!password.trim()) return "Password is required.";
     if (!isLogin) {
-      if (!name.trim()) {
-        return "Name is required.";
-      }
-      if (password.length < 8) {
-        return "Password must be at least 8 characters long.";
-      }
-      if (password !== repeatPassword) {
-        return "Passwords do not match.";
-      }
+      if (!name.trim()) return "Name is required.";
+      if (password.length < 8) return "Password must be at least 8 characters.";
+      if (password !== repeatPassword) return "Passwords do not match.";
     }
     return null;
   };
 
+  // Handle user login
   const handleLoginSubmit = async () => {
     const validationError = validateInputs();
     if (validationError) {
@@ -47,7 +37,7 @@ function LoginPage() {
     }
 
     try {
-      const response = await fetch(baseUrl + `/auth/login`, {
+      const response = await fetch(`${baseUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,15 +47,12 @@ function LoginPage() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          setError(
-            "Incorrect email or password. Try again or register a new account."
-          );
+          setError("Incorrect email or password. Try again or register.");
         } else {
           throw new Error("Unexpected error occurred.");
         }
       } else {
         const json = await response.json();
-        setError("");
         await lsList.save("userLoginData", {
           accessToken: json.data.accessToken,
           name: json.data.name,
@@ -73,11 +60,11 @@ function LoginPage() {
         navigate("/profile-page");
       }
     } catch (err) {
-      console.error(err.message);
       setError("Something went wrong. Please try again.");
     }
   };
 
+  // Handle user registration
   const handleRegisterSubmit = async () => {
     const validationError = validateInputs();
     if (validationError) {
@@ -86,7 +73,7 @@ function LoginPage() {
     }
 
     try {
-      const response = await fetch(baseUrl + `/auth/register`, {
+      const response = await fetch(`${baseUrl}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,23 +82,21 @@ function LoginPage() {
           email,
           password,
           name,
-          venueManager: role === "venueManager" ? true : false,
+          venueManager: role === "venueManager",
         }),
       });
 
       if (!response.ok) {
         const json = await response.json();
-        if (json.errors[0] && json.errors[0].message) {
+        if (json.errors?.[0]?.message) {
           throw new Error(json.errors[0].message);
         } else {
           throw new Error("Failed to register. Please try again.");
         }
       }
 
-      setError("");
       setIsLogin(true); // Switch to login view after successful registration
     } catch (err) {
-      console.error(err.message);
       setError(err.message);
     }
   };
@@ -133,6 +118,7 @@ function LoginPage() {
             placeholder="Enter your email"
           />
         </div>
+
         {!isLogin && (
           <>
             <div className="mb-3">
@@ -164,6 +150,7 @@ function LoginPage() {
             </div>
           </>
         )}
+
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
             Password:
@@ -177,6 +164,7 @@ function LoginPage() {
             placeholder="Enter your password"
           />
         </div>
+
         {!isLogin && (
           <div className="mb-3">
             <label htmlFor="repeatPassword" className="form-label">
@@ -192,6 +180,7 @@ function LoginPage() {
             />
           </div>
         )}
+
         <div className="text-center">
           <button
             className="btn btn-primary"
@@ -200,7 +189,9 @@ function LoginPage() {
             {isLogin ? "Login" : "Create Account"}
           </button>
         </div>
+
         {error && <p className="text-danger text-center mt-3">{error}</p>}
+
         <div className="text-center mt-3">
           <p>
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
@@ -208,7 +199,7 @@ function LoginPage() {
               className="btn btn-link p-0"
               onClick={() => {
                 setIsLogin(!isLogin);
-                setError(null); // Clear errors on toggle
+                setError(null);
               }}
             >
               {isLogin ? "Create Account" : "Login"}

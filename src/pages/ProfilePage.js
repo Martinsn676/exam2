@@ -11,26 +11,25 @@ const baseUrl = "https://v2.api.noroff.dev";
 const ProfilePage = () => {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState(null);
-  const [avatarUrl, setAvatarUrl] = useState(""); // For avatar URL input
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // For popup visibility
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [error, setError] = useState(null);
-  const [bookings, setBookings] = useState(null);
-  const [venues, setVenues] = useState(null);
+  const [bookings, setBookings] = useState([]);
+  const [venues, setVenues] = useState([]);
+
+  // Fetch user details and check authentication
   useEffect(() => {
     const checkUserData = async () => {
       try {
         const userData = await lsList.get("userLoginData");
-        console.log("userData", userData);
         if (!userData || !userData.accessToken) {
           navigate("/login-page");
-          return null; // Exit early if user data is invalid
+          return null;
         }
-
-        return userData; // Return valid user data
-      } catch (err) {
-        console.error("Error fetching user data:", err);
+        return userData;
+      } catch {
         navigate("/login-page");
-        return null; // Exit early on error
+        return null;
       }
     };
 
@@ -41,45 +40,34 @@ const ProfilePage = () => {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${userData.accessToken}`, // Add token for authorization
+              Authorization: `Bearer ${userData.accessToken}`,
               "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
             },
           }
         );
-
-        if (!response.ok) {
-          const jsonData = await response.json();
-          console.log("jsonData", jsonData);
-          throw new Error("Network response was not ok");
-        }
+        if (!response.ok) throw new Error("Failed to fetch user details");
 
         const jsonData = await response.json();
-        console.log("jsonData", jsonData);
         lsList.save("userData", jsonData.data);
-        // Update state with the fetched data
         setUserDetails(jsonData.data);
-        setBookings(jsonData.data.bookings); // Assuming bookings is part of the response
-        setVenues(jsonData.data.venues);
-        setAvatarUrl(jsonData.data.avatar.url || ""); // Set initial avatar URL
+        setBookings(jsonData.data.bookings || []);
+        setVenues(jsonData.data.venues || []);
+        setAvatarUrl(jsonData.data.avatar?.url || "");
       } catch (err) {
-        console.error("Error fetching user details:", err);
-        setError(err.message); // Handle errors
+        setError(err.message);
       }
     };
 
-    // Run the user check and then fetch additional details
     const initialize = async () => {
       const userData = await checkUserData();
-      if (userData) {
-        fetchUserDetails(userData);
-      }
+      if (userData) fetchUserDetails(userData);
     };
 
-    initialize(); // Run the initialization process
-  }, [navigate]); // Dependencies
+    initialize();
+  }, [navigate]);
 
+  // Update avatar URL
   const handleAvatarChange = async () => {
-    console.log("handleAvatarChange");
     if (!avatarUrl.trim()) {
       setError("Avatar URL cannot be empty.");
       return;
@@ -92,51 +80,39 @@ const ProfilePage = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userDetails.accessToken}`, // Add token for authorization
+            Authorization: `Bearer ${userDetails.accessToken}`,
             "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
           },
           body: JSON.stringify({
-            avatar: {
-              url: avatarUrl,
-              alt: `${userDetails.name}'s avatar`, // Optional alt text
-            },
+            avatar: { url: avatarUrl, alt: `${userDetails.name}'s avatar` },
           }),
         }
       );
-      console.log("response", response);
-      if (!response.ok) {
-        const json = await response.json();
-        console.log(json);
-        throw new Error(
-          "Failed to update avatar. Ensure the URL is publicly accessible."
-        );
-      }
+      if (!response.ok) throw new Error("Failed to update avatar");
 
       const updatedData = await response.json();
-      console.log("updatedData", updatedData);
-      const newUserDetails = userDetails;
-      newUserDetails.avatar.url = avatarUrl;
-
-      setUserDetails(newUserDetails);
+      setUserDetails((prev) => ({ ...prev, avatar: updatedData.data.avatar }));
+      setIsPopupOpen(false);
       setError("");
-      setIsPopupOpen(false); // Close the popup after successful update
     } catch (err) {
-      console.error(err.message);
-      setError("Something went wrong. Please try again.");
+      setError(err.message);
     }
   };
+
+  // Sign out the user
   const handleSignOut = () => {
-    lsList.remove("userData"); // Remove user data from storage
-    navigate("/login-page"); // Redirect to login page
-  };
-  const addNewVenue = () => {
-    navigate("/manage-venue/new"); // Redirect to login page
+    lsList.remove("userLoginData");
+    navigate("/login-page");
   };
 
-  if (!userDetails) {
-    return <p>Loading...</p>;
-  }
-  console.log("userDetails", userDetails);
+  // Navigate to add a new venue
+  const addNewVenue = () => {
+    navigate("/manage-venue/new");
+  };
+
+  // Render loading state or content
+  // if (!userDetails) return <p>Loading...</p>;
+  if (!userDetails) return <p></p>;
   return (
     <div className="container mt-5 d-flex flex-column align-items-center profile-main-container">
       <div className="headline">
@@ -156,135 +132,109 @@ const ProfilePage = () => {
         >
           <img
             className="avatar-image"
-            src={userDetails.avatar.url}
+            src={userDetails.avatar?.url || "https://via.placeholder.com/150"}
             alt="User avatar"
           />
           <img className="edit-icon" src={editIcon} alt="Edit icon" />
         </div>
       )}
 
-      {/* Conditional Rendering for Venues or Bookings */}
-      <div className="mt-4">
-        {userDetails.venueManager ? (
-          <div>
-            <h3>Your Venues</h3>
-            <div className="mt-4 text-center">
-              <button
-                className="cta-button"
-                onClick={addNewVenue} // Handle sign out
-              >
-                Add venue
-              </button>
+      {/* Manager View */}
+      {userDetails.venueManager ? (
+        <div className="mt-5">
+          <h3>Your Venues</h3>
+          <button className="cta-button mt-3" onClick={addNewVenue}>
+            Add Venue
+          </button>
+          {venues.length > 0 ? (
+            <div className="venues-list mt-4">
+              {venues.map((venue) => (
+                <Link
+                  to={`/manage-venue/${venue.id}`}
+                  key={venue.id}
+                  className="text-decoration-none text-black"
+                >
+                  <div className="venue-item d-flex align-items-center p-3 mb-3 border rounded">
+                    <div className="venue-image me-3">
+                      <img
+                        src={
+                          venue.media?.[0]?.url ||
+                          "https://via.placeholder.com/150"
+                        }
+                        alt={venue.name}
+                        className="img-fluid rounded"
+                        style={{
+                          width: "150px",
+                          height: "100px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                    <div className="venue-details">
+                      <h5>{venue.name}</h5>
+                      <p>
+                        <strong>Price:</strong> ${venue.price} / night
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
-            {venues && venues.length > 0 ? (
-              <div className="venues-list mt-4">
-                {venues.map((venue, index) => (
-                  <Link
-                    to={`/manage-venue/${venue.id}`}
-                    key={index}
-                    className="text-decoration-none text-black"
-                  >
-                    <div className="venue-item d-flex align-items-center p-3 mb-3 border rounded">
-                      {/* Image Section */}
-                      <div className="venue-image me-3">
-                        <img
-                          src={
-                            venue.media[0]?.url ||
-                            "https://via.placeholder.com/150"
-                          }
-                          alt={venue.name || "Venue"}
-                          className="img-fluid rounded"
-                          style={{
-                            width: "150px",
-                            height: "100px",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
-
-                      {/* Details Section */}
-                      <div className="venue-details">
-                        <h5 className="mb-2">{venue.name || "Venue Name"}</h5>
-
-                        <p className="mb-0">
-                          <strong>Price:</strong> ${venue.price || "N/A"} /
-                          night
-                        </p>
-                      </div>
+          ) : (
+            <p>No venues created yet</p>
+          )}
+        </div>
+      ) : (
+        /* Bookings View */
+        <div>
+          <h3>Bookings</h3>
+          {bookings.length > 0 ? (
+            <div className="bookings-list mt-4">
+              {bookings.map((booking) => (
+                <Link
+                  to={`/venue/${booking.venue?.id}`}
+                  key={booking.id}
+                  className="text-decoration-none text-black"
+                >
+                  <div className="booking-item d-flex align-items-center p-3 mb-3 border rounded">
+                    <div className="booking-image me-3">
+                      <img
+                        src={
+                          booking.venue?.media?.[0]?.url ||
+                          "https://via.placeholder.com/150"
+                        }
+                        alt={booking.venue?.name}
+                        className="img-fluid rounded"
+                        style={{
+                          width: "150px",
+                          height: "100px",
+                          objectFit: "cover",
+                        }}
+                      />
                     </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p>No venues created yet</p>
-            )}
-          </div>
-        ) : (
-          <div>
-            <h3>Bookings</h3>
-            {bookings && bookings.length > 0 ? (
-              <div className="bookings-list">
-                {bookings.map((booking, index) => (
-                  <Link
-                    to={`/venue/${booking.venue?.id || ""}`}
-                    key={index}
-                    className="text-decoration-none text-black"
-                  >
-                    <div className="booking-item d-flex align-items-center p-3 mb-3 border rounded">
-                      {/* Image Section */}
-                      <div className="booking-image me-3">
-                        <img
-                          src={
-                            booking.venue?.media[0]?.url ||
-                            "https://via.placeholder.com/150"
-                          }
-                          alt={booking.venue?.name || "Venue"}
-                          className="img-fluid rounded"
-                          style={{
-                            width: "150px",
-                            height: "100px",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </div>
-
-                      {/* Details Section */}
-                      <div className="booking-details">
-                        <h5 className="mb-2">
-                          {booking.venue?.name || "Venue Name"}
-                        </h5>
-                        <p className="mb-1">
-                          <strong>From:</strong>{" "}
-                          {normalizeDate(booking.dateFrom)}
-                        </p>
-                        <p className="mb-1">
-                          <strong>To:</strong> {normalizeDate(booking.dateTo)}
-                        </p>
-                        <p className="mb-0">
-                          <strong>Address:</strong>{" "}
-                          {booking.venue?.address || placeHolders.address}
-                        </p>
-                      </div>
+                    <div className="booking-details">
+                      <h5>{booking.venue?.name}</h5>
+                      <p>
+                        <strong>From:</strong> {normalizeDate(booking.dateFrom)}
+                      </p>
+                      <p>
+                        <strong>To:</strong> {normalizeDate(booking.dateTo)}
+                      </p>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p>No bookings yet</p>
-            )}
-          </div>
-        )}
-      </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p>No bookings yet</p>
+          )}
+        </div>
+      )}
 
       {/* Sign-Out Button */}
-      <div className="mt-4 text-center">
-        <button
-          className="cta-danger cta-button"
-          onClick={handleSignOut} // Handle sign out
-        >
-          Sign Out
-        </button>
-      </div>
+      <button className="cta-danger cta-button mt-4" onClick={handleSignOut}>
+        Sign Out
+      </button>
 
       {/* Popup for Avatar Editing */}
       {isPopupOpen && (
@@ -316,4 +266,5 @@ const ProfilePage = () => {
     </div>
   );
 };
+
 export default ProfilePage;

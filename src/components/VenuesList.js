@@ -3,50 +3,54 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useDocumentTitle from "../hooks/useDocumentTitle";
 import placeHolders from "../asserts/placeHolders";
 import "./venuesList.scss";
-import wifiIcon from "../icons/Wi-Fi.png"; // Import the image
-import petsIcon from "../icons/Pets.png"; // Import the image
-import parkingIcon from "../icons/Parking.png"; // Import the image
+import wifiIcon from "../icons/Wi-Fi.png";
+import petsIcon from "../icons/Pets.png";
+import parkingIcon from "../icons/Parking.png";
+import breakfastIcon from "../icons/Breakfast.png";
 
-import breakfastIcon from "../icons/Breakfast.png"; // Import the image
 const baseUrl = "https://v2.api.noroff.dev/";
 const venuesUrl = "holidaze/venues";
 
 function VenuesList() {
-  const [venues, setVenues] = useState([]); // State to store venues
-  const [loading, setLoading] = useState(true); // State for loading status
-  const [error, setError] = useState(null); // State for error handling
+  const [venues, setVenues] = useState([]); // Stores the list of venues
+  const [loading, setLoading] = useState(true); // Tracks loading state
+  const [error, setError] = useState(null); // Stores errors if any
   const [search, setSearch] = useState("");
-  const location = useLocation(); // To access query parameters
+  const [showAmount, setShowAmount] = useState(30); // Number of venues to display
+  const location = useLocation();
   const navigate = useNavigate();
 
   useDocumentTitle("Home page - Holidaze");
 
   useEffect(() => {
     const fetchVenues = async () => {
-      console.log("search", search);
       const endUrl =
         search && search.length > 0
           ? `/search?q=${search}&_bookings=true&owner=true`
           : "/?_bookings=true&owner=true";
+
       try {
-        console.log(baseUrl + venuesUrl + endUrl);
         const response = await fetch(baseUrl + venuesUrl + endUrl);
         if (!response.ok) {
           throw new Error("Failed to fetch venues");
         }
+
         const json = await response.json();
-        setVenues(json.data); // Update state with the fetched data
+        // Exclude venues with "test" in the name
+        const filteredVenues = json.data.filter(
+          (venue) => !venue.name.toLowerCase().includes("test")
+        );
+        setVenues(filteredVenues);
       } catch (err) {
         setError(err.message);
       } finally {
-        setLoading(false); // Set loading to false when the fetch is complete
+        setLoading(false);
       }
     };
 
     fetchVenues();
   }, [search]);
 
-  // Get the search term from the query parameter
   const queryParams = new URLSearchParams(location.search);
   const searchTerm = queryParams.get("search")?.toLowerCase() || "";
 
@@ -59,10 +63,7 @@ function VenuesList() {
       setSearch(false);
     }
   }, [searchTerm]);
-  // Filter venues based on the search term
 
-  if (loading) return <p>Loading venues...</p>;
-  if (error) return <p>Error: {error}</p>;
   const shortInfoSettings = [
     {
       name: "wifi",
@@ -94,6 +95,10 @@ function VenuesList() {
     },
   ];
 
+  // if (loading) return <p>Loading venues...</p>;
+  if (loading) return <p></p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div className="container mt-4">
       <h1 className="mb-4">
@@ -101,21 +106,19 @@ function VenuesList() {
       </h1>
 
       {venues.length === 0 ? (
-        // Display a "No Results" message
         <div className="text-center">
           <h2>No Results Found</h2>
           <p>We couldn't find any venues matching your search term.</p>
           <button
             className="btn btn-primary mt-3"
-            onClick={() => navigate("/")} // Reset to the home page
+            onClick={() => navigate("/")}
           >
             Go Back to Home
           </button>
         </div>
       ) : (
         <div className="row">
-          {venues.map((venueDetails) => {
-            // Generate short info for each venue
+          {venues.slice(0, showAmount).map((venueDetails) => {
             const shortInfoHtml = Object.entries(venueDetails.meta || {}).map(
               ([key, value]) => {
                 const setting = shortInfoSettings.find(
@@ -128,7 +131,7 @@ function VenuesList() {
                     </div>
                   );
                 }
-                return null; // Return null for keys not in shortInfoSettings
+                return null;
               }
             );
 
@@ -140,45 +143,43 @@ function VenuesList() {
                 style={{ cursor: "pointer" }}
               >
                 <div className="card">
-                  {venueDetails.media.length > 0 ? (
-                    <img
-                      src={venueDetails.media[0].url}
-                      className="card-img-top venue-image"
-                      alt={venueDetails.media[0].alt || venueDetails.name}
-                    />
-                  ) : (
-                    <img
-                      src="https://via.placeholder.com/300x200"
-                      className="card-img-top venue-image"
-                      alt="Placeholder"
-                    />
-                  )}
+                  <div className="venue-image-container">
+                    {venueDetails.media.length > 0 ? (
+                      <img
+                        src={venueDetails.media[0].url}
+                        className="card-img-top venue-image"
+                        alt={venueDetails.media[0].alt || venueDetails.name}
+                      />
+                    ) : (
+                      <img
+                        src="https://via.placeholder.com/300x200"
+                        className="card-img-top venue-image"
+                        alt="Placeholder"
+                      />
+                    )}
+                  </div>
                   <div className="card-body rounded-20">
                     <h5 className="card-title">{venueDetails.name}</h5>
                     <div className="lemon-font card-address grey-text">
                       {venueDetails.location
                         ? `${
-                            venueDetails.location.address
-                              ? venueDetails.location.address
-                              : placeHolders.address
+                            venueDetails.location.address ||
+                            placeHolders.address
                           }, ${
-                            venueDetails.location.city
-                              ? venueDetails.location.city
-                              : placeHolders.city
+                            venueDetails.location.city || placeHolders.city
                           }, ${
-                            venueDetails.location.country
-                              ? venueDetails.location.country
-                              : placeHolders.country
+                            venueDetails.location.country ||
+                            placeHolders.country
                           }`
                         : "Address information not available"}
-                    </div>{" "}
+                    </div>
                     <div className="d-flex flex-row">{shortInfoHtml}</div>
                     <ul className="list-unstyled lemon-font group-grey-offshift">
-                      <li className="">Price</li>
+                      <li>Price</li>
                       <li className="grey-text">
                         {venueDetails.price}$ per night
                       </li>
-                      <li className="lemon-font">Max guests</li>
+                      <li>Max guests</li>
                       <li className="grey-text">{venueDetails.maxGuests}</li>
                     </ul>
                     <button className="cta-button card-cta">
@@ -189,6 +190,16 @@ function VenuesList() {
               </div>
             );
           })}
+          {venues.length > showAmount && (
+            <div className="mt-4 text-center">
+              <button
+                className="cta-button"
+                onClick={() => setShowAmount(showAmount + 10)}
+              >
+                Show more
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

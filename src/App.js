@@ -18,9 +18,7 @@ function App() {
 
   return (
     <Router>
-      {" "}
       <ScrollToTop />
-      {/* Header is now inside Router */}
       <Header onSearch={handleSearch} />
       <main>
         <Routes>

@@ -1,12 +1,38 @@
-.venue-listing {
-  min-width: 350px;
-
-  .venue-image {
-    width: 100%; /* Ensure the image spans the full width of its container */
-    max-height: 300px; /* Limit the height to prevent overly tall images */
-    object-fit: cover; /* Ensures the image covers the container without distortion */
-    border-radius: 20px 20px 0 0; /* Optional: Add some rounding to soften the edges */
+@media (min-width: 768px) {
+  .venue-listing {
+    width: 50% !important;
   }
+  .card {
+    .venue-image-container {
+      min-height: 200px;
+    }
+    .venue-image {
+      max-height: 200px; /* Limit the height to prevent overly tall images */
+    }
+  }
+}
+@media (min-width: 1150px) {
+  .venue-listing {
+    width: 33% !important;
+  }
+}
+@media (min-width: 1500px) {
+  .venue-listing {
+    width: 25% !important;
+  }
+}
+@media (max-width: 768px) {
+  .venue-listing {
+    min-width: 350px;
+  }
+  .card {
+    .venue-image {
+      max-height: 350px; /* Limit the height to prevent overly tall images */
+    }
+  }
+}
+
+.venue-listing {
   .card-address {
     margin: -10px 0 0 30px;
   }
@@ -14,7 +40,15 @@
     margin: -5px 0 0 30px;
   }
   .card {
-    height: 500px !important;
+    min-height: 490px;
+    .venue-image-container {
+      .venue-image {
+        width: 100%; /* Ensure the image spans the full width of its container */
+        object-fit: cover; /* Ensures the image covers the container without distortion */
+        border-radius: 20px 20px 0 0; /* Optional: Add some rounding to soften the edges */
+      }
+    }
+    // height: 500px !important;
     border-radius: 20px !important;
     padding-bottom: 30px !important;
   }

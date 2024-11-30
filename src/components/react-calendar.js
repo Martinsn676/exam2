@@ -1,27 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Calendar from "react-calendar"; // Calendar component
-import "react-calendar/dist/Calendar.css"; // Calendar styles
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import { lsList } from "../hooks/lists";
+
 const baseUrl = "https://v2.api.noroff.dev";
 
 function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
-  const [availableDates, setAvailableDates] = useState([]);
-  const [dateConfirmationString, setDateConfirmationString] = useState(null); // Store the selected check-in date
-  const [selectedDates, setSelectedDates] = useState(null); // Store the selected dates for confirmation
+  const [errorMessage, setErrorMessage] = useState(null); // Error message for booking issues
+  const [availableDates, setAvailableDates] = useState([]); // List of available dates
+  const [dateConfirmationString, setDateConfirmationString] = useState(null); // Selected date confirmation string
+  const [selectedDates, setSelectedDates] = useState(null); // Selected booking dates
   const navigate = useNavigate();
-  // Helper function to normalize dates to "YYYY-MM-DD"
+
+  // Helper function to format dates to "YYYY-MM-DD"
   const normalizeDate = (date) => new Date(date).toISOString().split("T")[0];
-  console.log("takenDates", takenDates);
+
   useEffect(() => {
     const generateDateRange = () => {
-      const start = new Date(); // Today
+      const start = new Date(); // Today's date
       const end = new Date();
       end.setDate(start.getDate() + 90); // 90 days from today
 
       const dates = [];
       for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        dates.push(normalizeDate(d)); // Normalize each date
+        dates.push(normalizeDate(d));
       }
       return dates;
     };
@@ -29,18 +32,17 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
     const calculateAvailableDates = () => {
       const allDates = generateDateRange();
       const takenDatesSet = new Set(takenDates.map(normalizeDate)); // Normalize taken dates
-      console.log("takenDatesSet", takenDatesSet);
-      // Find dates that can accommodate the stay
+
+      // Filter out unavailable dates based on the length of stay
       return allDates.filter((startDate) => {
         for (let i = 0; i < days; i++) {
           const dateToCheck = new Date(startDate);
           dateToCheck.setDate(dateToCheck.getDate() + i);
-          const formattedDate = normalizeDate(dateToCheck); // Normalize date
-          if (takenDatesSet.has(formattedDate)) {
-            return false; // Any part of the range is taken
+          if (takenDatesSet.has(normalizeDate(dateToCheck))) {
+            return false; // Unavailable if any date in range is taken
           }
         }
-        return true; // All dates in the range are available
+        return true; // All dates in range are available
       });
     };
 
@@ -49,7 +51,7 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
 
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
-      const formattedDate = normalizeDate(date); // Normalize the date
+      const formattedDate = normalizeDate(date);
       if (availableDates.includes(formattedDate)) {
         return "available-date";
       }
@@ -62,104 +64,98 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
 
   const tileDisabled = ({ date, view }) => {
     if (view === "month") {
-      const formattedDate = normalizeDate(date); // Normalize the date
+      const formattedDate = normalizeDate(date);
       return !availableDates.includes(formattedDate); // Disable unavailable dates
     }
     return false;
   };
 
   const handleDateChange = (date) => {
-    const selected = normalizeDate(date); // Format the selected date
-
-    // Calculate the end date based on the number of nights
+    const selected = normalizeDate(date); // Check-in date
     const endDate = new Date(date);
-    endDate.setDate(endDate.getDate() + days); // Add the number of days
+    endDate.setDate(endDate.getDate() + days); // Check-out date
 
-    const formattedEndDate = normalizeDate(endDate); // Format the end date
-    console.log(`Selected check-in date: ${selected}`);
-    console.log(`Calculated check-out date: ${formattedEndDate}`);
+    const formattedEndDate = normalizeDate(endDate);
 
     setSelectedDates({ start: selected, end: formattedEndDate });
 
+    // Display booking confirmation details
     setDateConfirmationString(
       <div className="d-flex flex-column align-items-center p-3">
-        <div className="mb-2">
+        <div className="">
           From <strong>{selected}</strong> to{" "}
-          <strong>{formattedEndDate}</strong> ({days}{" "}
-          {days > 1 ? "nights" : "night"})
+          <strong>{formattedEndDate}</strong>
+        </div>
+        <div>
+          ({days} {days > 1 ? "nights" : "night"})
         </div>
         <div className="fs-5">
-          <strong>Total Price:</strong> {Number(price) * days}$
+          Total Price:<strong> {Number(price) * days}$</strong>
         </div>
       </div>
     );
   };
 
   const handleConfirmBooking = async () => {
-    console.log("Booking Confirmed:", selectedDates);
+    if (!selectedDates) return;
     const userLoginData = await lsList.get("userLoginData");
+
     const body = {
-      dateFrom: selectedDates.start, // Required - Instance of new Date()
-      dateTo: selectedDates.end, // Required - Instance of new Date()
-      guests: 1, // Required
-      venueId: id, // Required - The id of the venue to book
+      dateFrom: selectedDates.start,
+      dateTo: selectedDates.end,
+      guests: 1,
+      venueId: id,
     };
-    console.log("body", body);
+
     try {
       const response = await fetch(`${baseUrl}/holidaze/bookings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userLoginData.accessToken}`, // Add token for authorization
+          Authorization: `Bearer ${userLoginData.accessToken}`,
           "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
         },
         body: JSON.stringify(body),
       });
-      console.log("response", response);
+
       if (!response.ok) {
-        const json = await response.json();
-        console.log(json);
         throw new Error("Failed to create booking.");
       }
+
       navigate("/profile-page");
-      const updatedData = await response.json();
-      console.log("updatedData", updatedData);
     } catch (err) {
-      console.error(err.message);
+      setErrorMessage(err.message);
     }
   };
 
   return (
     <div>
       <Calendar
-        onChange={handleDateChange} // Handle date selection
-        tileClassName={tileClassName} // Apply classes to tiles
+        onChange={handleDateChange} // Triggered when a date is selected
+        tileClassName={tileClassName} // Highlight available/taken dates
         tileDisabled={tileDisabled} // Disable unavailable dates
       />
       <style>{`
-.react-calendar{
-  border:3px solid #a0a096;
-margin:0 auto;
-}
+        .react-calendar {
+          border: 3px solid #a0a096;
+          margin: 0 auto;
+        }
         .available-date {
           background-color: #d4edda;
           font-weight: bold;
-       
         }
         .taken-date {
           background-color: #f8d7da;
-         
         }
       `}</style>
 
-      {/* Confirmation Text */}
       {dateConfirmationString && (
         <div className="mt-3 text-center">
           {dateConfirmationString}
           {signedInUser ? (
             <button
               className="btn btn-primary mt-3"
-              onClick={handleConfirmBooking} // Handle booking confirmation
+              onClick={handleConfirmBooking}
             >
               Confirm Booking
             </button>
@@ -168,12 +164,13 @@ margin:0 auto;
               <span>Please sign in to place your booking</span>
               <button
                 className="btn btn-primary mt-3"
-                onClick={() => navigate("/login-page")} // Handle booking confirmation
+                onClick={() => navigate("/login-page")}
               >
                 Sign in
               </button>
             </div>
           )}
+          {errorMessage && <p className="text-danger">{errorMessage}</p>}
         </div>
       )}
     </div>

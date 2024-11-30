@@ -7,9 +7,9 @@ function ScrollToTop() {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // For smooth scrolling
+      behavior: "smooth",
     });
-  }, [pathname]); // Run whenever the path changes
+  }, [pathname]);
 
   return null;
 }

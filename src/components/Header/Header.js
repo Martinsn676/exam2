@@ -45,7 +45,7 @@ function Header() {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
             />
-            <button className="btn btn-primary" onClick={handleSearch}>
+            <button className="cta-button search-button" onClick={handleSearch}>
               Search
             </button>
           </div>
@@ -70,7 +70,7 @@ function Header() {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
           />
-          <button className="btn btn-primary" onClick={handleSearch}>
+          <button className="cta-button" onClick={handleSearch}>
             Search
           </button>
         </div>

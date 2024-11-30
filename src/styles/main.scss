@@ -17,10 +17,11 @@ main {
 
 @media (min-width: 769px) {
   main {
-    padding: 100px 20% 100px 20%;
+    padding: 100px 0 100px 0;
+    max-width: 1100px;
+    margin: 0 auto;
   }
-  .login-main-container,
-  .profile-main-container {
+  .login-main-container {
     max-width: 500px !important;
   }
 }
