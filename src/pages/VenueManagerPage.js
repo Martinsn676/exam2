@@ -3,7 +3,6 @@ import "./VenueManagerPage.scss"; // Assuming you have styles for this page
 import editIcon from "../icons/Edit.png"; // Replace with your edit icon path
 import { lsList } from "../utils/lists";
 import { useParams, useNavigate } from "react-router-dom"; // To get the 'id' from the URL
-import placeHolders from "../asserts/placeHolders";
 
 function CreateVenuePage() {
   const { id } = useParams(); // Get the venue id from the URL

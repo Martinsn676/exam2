@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import VenuePage from "./pages/VenuePage";
@@ -9,8 +9,6 @@ import LoginPage from "./pages/LoginPage";
 import VenueManagerPage from "./pages/VenueManagerPage";
 
 function App() {
-  const [searchResults, setSearchResults] = useState([]);
-
   // Pass the search logic to the header
   const handleSearch = (term) => {
     console.log("Search term:", term);
@@ -23,10 +21,7 @@ function App() {
       <Header onSearch={handleSearch} />
       <main>
         <Routes>
-          <Route
-            path="/"
-            element={<HomePage searchResults={searchResults} />}
-          />
+          <Route path="/" element={<HomePage />} />
           <Route path="/venue/:id" element={<VenuePage />} />
           <Route path="/profile-page" element={<ProfilePage />} />
           <Route path="/login-page" element={<LoginPage />} />

@@ -6,7 +6,7 @@ import petsIcon from "../icons/Pets.png"; // Import the image
 import parkingIcon from "../icons/Parking.png"; // Import the image
 import mapMarker from "../icons/MapIcon.png"; // Import the image
 import breakfastIcon from "../icons/Breakfast.png"; // Import the image
-import useDocumentTitle from "../hooks/useDocumentTitle";
+
 import placeHolders from "../asserts/placeHolders";
 import { lsList } from "../utils/lists";
 // import ReservationCalendar from "../components/reservationCalendar";
@@ -44,7 +44,7 @@ function VenuePage() {
     };
 
     initialize(); // Run the initialization process
-  }, []);
+  }, [signedInUser]);
   useEffect(() => {
     const fetchVenue = async () => {
       try {

@@ -6,7 +6,7 @@ import "./venuesList.scss";
 import wifiIcon from "../icons/Wi-Fi.png"; // Import the image
 import petsIcon from "../icons/Pets.png"; // Import the image
 import parkingIcon from "../icons/Parking.png"; // Import the image
-import mapMarker from "../icons/MapIcon.png"; // Import the image
+
 import breakfastIcon from "../icons/Breakfast.png"; // Import the image
 const baseUrl = "https://v2.api.noroff.dev/";
 const venuesUrl = "holidaze/venues";
