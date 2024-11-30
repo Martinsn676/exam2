@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Lemon&display=swap");
+@import "./components";
+:root {
+  --cta-background-color: #4a6ebc;
+  --cta-background-danger-color: #bc4a4c;
+  --cta-background-positive-color: #34d357;
+  --cta-hover-color: #0056b3; /* Darker shade for hover */
+  --cta-active-color: #004085; /* Even darker for active state */
+  --cta-hover-text-color: #ffffff;
+  --grey-text: #6b6b6b;
+  --grey-input: #d9d9d9;
+}
+main {
+  padding-top: 210px;
+  padding-bottom: 300px;
+}

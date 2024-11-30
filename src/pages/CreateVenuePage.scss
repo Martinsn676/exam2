@@ -1,0 +1,48 @@
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.image-container {
+  position: relative;
+  margin: 20px auto;
+  width: fit-content;
+}
+
+.edit-icon {
+  cursor: pointer;
+}
+
+.left-selected,
+.right-selected {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  .alt {
+    width: 50px;
+    text-align: center;
+    padding: 8px;
+    background-color: var(--grey-input);
+  }
+  .left-alt {
+    border-radius: 20px 0 0 20px;
+  }
+  .right-alt {
+    border-radius: 0 20px 20px 0;
+  }
+}
+.left-selected {
+  .left-alt {
+    background-color: var(--cta-background-positive-color);
+  }
+}
+.right-selected {
+  .right-alt {
+    background-color: var(--cta-background-danger-color);
+  }
+}
+#description {
+  min-height: 150px;
+}

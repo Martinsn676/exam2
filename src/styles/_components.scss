@@ -1,0 +1,39 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+.short-description,
+.lemon-font {
+  font-family: "Lemon", sans-serif !important;
+}
+.grey-text {
+  color: var(--grey-text);
+}
+.cta-button {
+  background-color: var(--cta-background-color);
+  border-radius: 20px 0 20px 0; /* Removed the incorrect '!' */
+  font-size: large;
+  padding: 12px 19px; /* Added horizontal padding for better appearance */
+  font-family: "Lemon", sans-serif !important;
+  color: white;
+  border: none; /* Optional: remove default border */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+
+  &:hover {
+    background-color: var(--cta-hover-color); /* Add a hover color */
+    color: var(
+      --cta-hover-text-color,
+      black
+    ); /* Optional text color on hover */
+  }
+  &:active {
+    background-color: var(--cta-active-color); /* Add an active color */
+  }
+  &.cta-danger {
+    background-color: var(--cta-background-danger-color);
+  }
+  &.disabled {
+    background-color: grey;
+  }
+}
