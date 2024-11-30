@@ -60,7 +60,7 @@ function Header() {
       </div>
 
       {/* Search Section for Mobile */}
-      <div className="search-container d-md-none mt-3">
+      <div className="search-container d-md-none mt-1 mb-1">
         <div className="input-group">
           <input
             type="text"
