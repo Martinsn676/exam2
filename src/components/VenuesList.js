@@ -143,13 +143,13 @@ function VenuesList() {
                   {venueDetails.media.length > 0 ? (
                     <img
                       src={venueDetails.media[0].url}
-                      className="card-img-top"
+                      className="card-img-top venue-image"
                       alt={venueDetails.media[0].alt || venueDetails.name}
                     />
                   ) : (
                     <img
                       src="https://via.placeholder.com/300x200"
-                      className="card-img-top"
+                      className="card-img-top venue-image"
                       alt="Placeholder"
                     />
                   )}

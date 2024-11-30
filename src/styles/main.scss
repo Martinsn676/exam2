@@ -11,6 +11,16 @@
   --grey-input: #d9d9d9;
 }
 main {
-  padding-top: 210px;
+  padding-top: 150px;
   padding-bottom: 300px;
+}
+
+@media (min-width: 769px) {
+  main {
+    padding: 100px 170px 100px 170px;
+  }
+  .login-main-container,
+  .profile-main-container {
+    max-width: 500px !important;
+  }
 }

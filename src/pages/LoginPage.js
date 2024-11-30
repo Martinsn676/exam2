@@ -8,22 +8,51 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState("guest"); // State for role selection
+  const [role, setRole] = useState("guest");
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Validation function
+  const validateInputs = () => {
+    if (!email.trim()) {
+      return "Email is required.";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address.";
+    }
+    if (!password.trim()) {
+      return "Password is required.";
+    }
+    if (!isLogin) {
+      if (!name.trim()) {
+        return "Name is required.";
+      }
+      if (password.length < 8) {
+        return "Password must be at least 8 characters long.";
+      }
+      if (password !== repeatPassword) {
+        return "Passwords do not match.";
+      }
+    }
+    return null;
+  };
+
   const handleLoginSubmit = async () => {
+    const validationError = validateInputs();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     try {
       const response = await fetch(baseUrl + `/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
@@ -50,8 +79,9 @@ function LoginPage() {
   };
 
   const handleRegisterSubmit = async () => {
-    if (password !== repeatPassword) {
-      setError("Passwords do not match.");
+    const validationError = validateInputs();
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -65,7 +95,7 @@ function LoginPage() {
           email,
           password,
           name,
-          venueManager: role === "venueManager" ? true : false, // Set role based on selection
+          venueManager: role === "venueManager" ? true : false,
         }),
       });
 
@@ -87,7 +117,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5 login-main-container">
       <h1 className="text-center">{isLogin ? "Login" : "Create Account"}</h1>
       <div className="mt-4">
         <div className="mb-3">

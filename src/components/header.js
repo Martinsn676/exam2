@@ -14,7 +14,6 @@ function Header() {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      // Navigate to HomePage with search term in query
       navigate(`/?search=${encodeURIComponent(searchTerm)}`);
     }
   };
@@ -30,28 +29,38 @@ function Header() {
       <div className="container d-flex justify-content-between align-items-center py-3">
         {/* Logo Section */}
         <div className="logo">
-          <Link to="/" className="text-white text-decoration-none">
-            <img src={Logo} alt="Logo" />
+          <Link to="/" className="text-decoration-none">
+            <img src={Logo} alt="Logo" className="logo-img" />
           </Link>
         </div>
 
-        {/* Navigation Section */}
-        <nav className="nav">
-          <ul className="d-flex list-unstyled m-0">
-            <li className="mx-2">
-              <Link
-                to="/profile-page"
-                className="text-white text-decoration-none"
-              >
-                <img src={userIcon} alt="User icon" />
-              </Link>
-            </li>
-          </ul>
-        </nav>
+        {/* Search Section */}
+        <div className="search-container d-none d-md-flex">
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+            />
+            <button className="btn btn-primary" onClick={handleSearch}>
+              Search
+            </button>
+          </div>
+        </div>
+
+        {/* Profile Section */}
+        <div className="profile">
+          <Link to="/profile-page" className="text-decoration-none">
+            <img src={userIcon} alt="User icon" className="user-icon" />
+          </Link>
+        </div>
       </div>
 
-      {/* Search Input Section */}
-      <div className="search-container mt-3">
+      {/* Search Section for Mobile */}
+      <div className="search-container d-md-none mt-3">
         <div className="input-group">
           <input
             type="text"
@@ -59,7 +68,7 @@ function Header() {
             placeholder="Search..."
             value={searchTerm}
             onChange={handleInputChange}
-            onKeyDown={handleKeyDown} // Add handler for Enter key
+            onKeyDown={handleKeyDown}
           />
           <button className="btn btn-primary" onClick={handleSearch}>
             Search

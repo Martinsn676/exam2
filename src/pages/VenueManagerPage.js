@@ -31,6 +31,7 @@ function CreateVenuePage() {
   const [venueDetails, setVenueDetails] = useState([]); // State for taken dates
   const [editMode, setEditMode] = useState(false);
   const [saved, setSaved] = useState(true);
+  const [finishedLoading, setFinishedLoading] = useState(false);
   const baseUrl = "https://v2.api.noroff.dev";
   const venuesUrl = "/holidaze/venues";
   const initialBookingsShow = 2;
@@ -68,9 +69,11 @@ function CreateVenuePage() {
           setError(err.message);
         } finally {
           setSaved(true);
+
           // setLoading(false); // Stop loading after the fetch is complete
         }
       }
+      setFinishedLoading(true);
     };
     fetchVenue();
   }, [id]);
@@ -97,7 +100,20 @@ function CreateVenuePage() {
       }
     };
     checkData(); // Run the function whenever dependencies change
-  }, [imageUrl, name, description, maxGuests, price, address, city, country]); // Watch these variables for changes
+  }, [
+    pets,
+    wifi,
+    parking,
+    breakfast,
+    imageUrl,
+    name,
+    description,
+    maxGuests,
+    price,
+    address,
+    city,
+    country,
+  ]); // Watch these variables for changes
 
   const handleImageSave = () => {
     if (!imageUrl.trim()) {
@@ -203,274 +219,282 @@ function CreateVenuePage() {
   };
 
   console.log("venueDetails.bookings", venueDetails.bookings);
-  return (
+
+  return !finishedLoading ? (
+    ""
+  ) : (
     <div className="container mt-5">
       <h1 className="text-center">
         {editMode ? `Viewing ${name || "Venue"}` : "Create a New Venue"}
       </h1>
-      {editMode && (
-        <div className="mt-4 text-center">
-          <button
-            className="cta-button"
-            onClick={() => navigate(`/venue/${id}`)} // Open delete confirmation popup
-          >
-            View Venue Listing
-          </button>
-        </div>
-      )}
-      {editMode && (
-        <div>
-          <h3 className="mt-5">Bookings</h3>
-          {venueDetails.bookings && venueDetails.bookings.length > 0 ? (
-            <div
-              className={
-                showAllBookings ? "bookings-list show-all" : "bookings-list"
-              }
-            >
-              {venueDetails.bookings.map((booking, index) => (
+      <div className="d-flex main-content">
+        <div className="left-side">
+          {editMode && (
+            <div className="mt-4 text-center">
+              <button
+                className="cta-button"
+                onClick={() => navigate(`/venue/${id}`)} // Open delete confirmation popup
+              >
+                View Venue Listing
+              </button>
+            </div>
+          )}
+          {editMode && (
+            <div>
+              <h3 className="mt-5">Bookings</h3>
+              {venueDetails.bookings && venueDetails.bookings.length > 0 ? (
                 <div
-                  key={index}
                   className={
-                    !showAllBookings && index > initialBookingsShow - 1
-                      ? "hidden-booking"
-                      : ""
+                    showAllBookings ? "bookings-list show-all" : "bookings-list"
                   }
                 >
-                  <div className="booking-item d-flex align-items-center p-3 mb-3 border rounded">
-                    {/* Booking Details */}
-                    <div className="booking-details">
-                      <p className="mb-1">
-                        <strong>Customer:</strong> {booking.customer.name}
-                      </p>
-                      <p className="mb-1">
-                        <strong>Email:</strong> {booking.customer.email}
-                      </p>
-                      <p className="mb-1">
-                        <strong>From:</strong> {normalizeDate(booking.dateFrom)}
-                      </p>
-                      <p className="mb-1">
-                        <strong>To:</strong> {normalizeDate(booking.dateTo)}
-                      </p>
+                  {venueDetails.bookings.map((booking, index) => (
+                    <div
+                      key={index}
+                      className={
+                        !showAllBookings && index > initialBookingsShow - 1
+                          ? "hidden-booking"
+                          : ""
+                      }
+                    >
+                      <div className="booking-item d-flex align-items-center p-3 mb-3 border rounded">
+                        {/* Booking Details */}
+                        <div className="booking-details">
+                          <p className="mb-1">
+                            <strong>Customer:</strong> {booking.customer.name}
+                          </p>
+                          <p className="mb-1">
+                            <strong>Email:</strong> {booking.customer.email}
+                          </p>
+                          <p className="mb-1">
+                            <strong>From:</strong>{" "}
+                            {normalizeDate(booking.dateFrom)}
+                          </p>
+                          <p className="mb-1">
+                            <strong>To:</strong> {normalizeDate(booking.dateTo)}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p>No bookings yet</p>
+              )}
+              {!showAllBookings &&
+                venueDetails.bookings.length > initialBookingsShow - 1 && (
+                  <div className="mt-4 text-center">
+                    <button
+                      className="cta-button"
+                      onClick={() => setShowAllBookings(true)} // Open delete confirmation popup
+                    >
+                      {`Show all bookings (${venueDetails.bookings.length})`}
+                    </button>
+                  </div>
+                )}
             </div>
-          ) : (
-            <p>No bookings yet</p>
           )}
-          {!showAllBookings &&
-            venueDetails.bookings.length > initialBookingsShow - 1 && (
-              <div className="mt-4 text-center">
+        </div>
+        <div className="right-side">
+          {editMode && <h3 className="mt-5">Edit venue</h3>}
+          {/* Image Section */}
+          <div
+            className="image-container"
+            onClick={() => setIsPopupOpen(true)}
+            style={{ cursor: "pointer" }}
+          >
+            <img
+              className="venue-image"
+              src={currentImage}
+              alt="Venue"
+              style={{
+                width: "300px",
+                height: "200px",
+                objectFit: "cover",
+                borderRadius: "8px",
+              }}
+            />
+            <img
+              className="edit-icon"
+              src={editIcon}
+              alt="Edit icon"
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                width: "30px",
+                height: "30px",
+              }}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="form-control"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter a name for your venue"
+            />
+          </div>
+          <div>
+            <div className="d-flex flex-row justify-content-between text-center">
+              <div className="w-50 align-items-center d-flex flex-column p-3">
+                Wifi included?
                 <button
-                  className="cta-button"
-                  onClick={() => setShowAllBookings(true)} // Open delete confirmation popup
+                  onClick={() => setWifi(wifi ? false : true)}
+                  className={wifi ? "left-selected" : "right-selected"}
                 >
-                  {`Show all bookings (${venueDetails.bookings.length})`}
+                  <strong className="left-alt alt">Yes</strong>
+                  <strong className="right-alt alt">No</strong>
                 </button>
               </div>
-            )}
-        </div>
-      )}
+              <div className="w-50 align-items-center d-flex flex-column p-3">
+                Breakfast included?
+                <button
+                  onClick={() => setBreakfast(breakfast ? false : true)}
+                  className={breakfast ? "left-selected" : "right-selected"}
+                >
+                  <strong className="left-alt alt">Yes</strong>
+                  <strong className="right-alt alt">No</strong>
+                </button>
+              </div>
+            </div>
+            <div className="d-flex flex-row justify-content-between">
+              <div className="w-50 align-items-center d-flex flex-column p-3">
+                Parking included?
+                <button
+                  onClick={() => setParking(parking ? false : true)}
+                  className={parking ? "left-selected" : "right-selected"}
+                >
+                  <strong className="left-alt alt">Yes</strong>
+                  <strong className="right-alt alt">No</strong>
+                </button>
+              </div>
+              <div className="w-50 align-items-center d-flex flex-column p-3">
+                Pets allowed?
+                <button
+                  onClick={() => setPets(pets ? false : true)}
+                  className={pets ? "left-selected" : "right-selected"}
+                >
+                  <strong className="left-alt alt">Yes</strong>
+                  <strong className="right-alt alt">No</strong>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="mb-3 w-50">
+            <label htmlFor="price" className="form-label">
+              Price per night in $
+            </label>
+            <input
+              type="number"
+              id="price"
+              className="form-control"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder=""
+            />
+          </div>
+          <div className="mb-3 w-50">
+            <label htmlFor="maxGuests" className="form-label">
+              Maximum number of guests
+            </label>
+            <input
+              type="number"
+              id="maxGuests"
+              className="form-control"
+              value={maxGuests}
+              onChange={(e) => setMaxGuests(e.target.value)}
+              placeholder=""
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="description" className="form-label">
+              Description
+            </label>
+            <textarea
+              type="text"
+              id="description"
+              className="form-control"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe your venue"
+            />
+          </div>
+          <h2>Address details</h2>
+          <div>
+            <div className="mb-3">
+              <label htmlFor="address" className="form-label">
+                Address
+              </label>
+              <input
+                type="text"
+                id="address"
+                className="form-control"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder=""
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="city" className="form-label">
+                City
+              </label>
+              <input
+                type="text"
+                id="city"
+                className="form-control"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder=""
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="country" className="form-label">
+                Country
+              </label>
+              <input
+                type="text"
+                id="country"
+                className="form-control"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                placeholder=""
+              />
+            </div>
+          </div>
 
-      {editMode && <h3 className="mt-5">Edit venue</h3>}
-      {/* Image Section */}
-      <div
-        className="image-container"
-        onClick={() => setIsPopupOpen(true)}
-        style={{ cursor: "pointer" }}
-      >
-        <img
-          className="venue-image"
-          src={currentImage}
-          alt="Venue"
-          style={{
-            width: "300px",
-            height: "200px",
-            objectFit: "cover",
-            borderRadius: "8px",
-          }}
-        />
-        <img
-          className="edit-icon"
-          src={editIcon}
-          alt="Edit icon"
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            width: "30px",
-            height: "30px",
-          }}
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="name" className="form-label">
-          Name
-        </label>
-        <input
-          type="text"
-          id="name"
-          className="form-control"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter a name for your venue"
-        />
-      </div>
-      <div>
-        <div className="d-flex flex-row justify-content-between">
-          <div className="w-50 align-items-center d-flex flex-column p-3">
-            Wifi included?
+          <div className="mt-4 text-center">
             <button
-              onClick={() => setWifi(wifi ? false : true)}
-              className={wifi ? "left-selected" : "right-selected"}
+              className={allDataOk ? "cta-button" : "cta-button disabled"}
+              onClick={handleCreateVenue} // Handle sign out
             >
-              <strong className="left-alt alt">Yes</strong>
-              <strong className="right-alt alt">No</strong>
+              {editMode
+                ? saved
+                  ? `Updated`
+                  : `Update venue`
+                : saved
+                ? "No changes"
+                : "Create venue"}
             </button>
           </div>
-          <div className="w-50 align-items-center d-flex flex-column p-3">
-            Breakfast included?
-            <button
-              onClick={() => setBreakfast(breakfast ? false : true)}
-              className={breakfast ? "left-selected" : "right-selected"}
-            >
-              <strong className="left-alt alt">Yes</strong>
-              <strong className="right-alt alt">No</strong>
-            </button>
-          </div>
-        </div>
-        <div className="d-flex flex-row justify-content-between">
-          <div className="w-50 align-items-center d-flex flex-column p-3">
-            Parking included?
-            <button
-              onClick={() => setParking(parking ? false : true)}
-              className={parking ? "left-selected" : "right-selected"}
-            >
-              <strong className="left-alt alt">Yes</strong>
-              <strong className="right-alt alt">No</strong>
-            </button>
-          </div>
-          <div className="w-50 align-items-center d-flex flex-column p-3">
-            Pets allowed?
-            <button
-              onClick={() => setPets(pets ? false : true)}
-              className={pets ? "left-selected" : "right-selected"}
-            >
-              <strong className="left-alt alt">Yes</strong>
-              <strong className="right-alt alt">No</strong>
-            </button>
-          </div>
+          {/* Delete Venue Button */}
+          {editMode && (
+            <div className="mt-4 text-center">
+              <button
+                className="cta-button cta-danger"
+                onClick={() => setIsDeletePopupOpen(true)} // Open delete confirmation popup
+              >
+                Delete Venue
+              </button>
+            </div>
+          )}
         </div>
       </div>
-      <div className="mb-3 w-50">
-        <label htmlFor="price" className="form-label">
-          Price per night
-        </label>
-        <input
-          type="number"
-          id="price"
-          className="form-control"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          placeholder="Enter the price per night"
-        />
-      </div>
-      <div className="mb-3 w-50">
-        <label htmlFor="maxGuests" className="form-label">
-          Maximum number of guests
-        </label>
-        <input
-          type="number"
-          id="maxGuests"
-          className="form-control"
-          value={maxGuests}
-          onChange={(e) => setMaxGuests(e.target.value)}
-          placeholder=""
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="description" className="form-label">
-          Description
-        </label>
-        <textarea
-          type="text"
-          id="description"
-          className="form-control"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe your venue"
-        />
-      </div>
-      <h2>Address details</h2>
-      <div>
-        <div className="mb-3">
-          <label htmlFor="address" className="form-label">
-            Address
-          </label>
-          <input
-            type="text"
-            id="address"
-            className="form-control"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder=""
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="city" className="form-label">
-            Area Code
-          </label>
-          <input
-            type="text"
-            id="city"
-            className="form-control"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder=""
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="country" className="form-label">
-            Country
-          </label>
-          <input
-            type="text"
-            id="country"
-            className="form-control"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            placeholder=""
-          />
-        </div>
-      </div>
-
-      <div className="mt-4 text-center">
-        <button
-          className={allDataOk ? "cta-button" : "cta-button disabled"}
-          onClick={handleCreateVenue} // Handle sign out
-        >
-          {editMode
-            ? saved
-              ? `Updated`
-              : `Update venue`
-            : saved
-            ? "No changes"
-            : "Create venue"}
-        </button>
-      </div>
-      {/* Delete Venue Button */}
-      {editMode && (
-        <div className="mt-4 text-center">
-          <button
-            className="cta-button cta-danger"
-            onClick={() => setIsDeletePopupOpen(true)} // Open delete confirmation popup
-          >
-            Delete Venue
-          </button>
-        </div>
-      )}
-
       {/* Popup for Adding Image URL */}
       {isPopupOpen && (
         <div className="popup">

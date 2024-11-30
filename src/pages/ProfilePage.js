@@ -150,7 +150,7 @@ const ProfilePage = () => {
   }
   console.log("userDetails", userDetails);
   return (
-    <div className="container mt-5 d-flex flex-column align-items-center">
+    <div className="container mt-5 d-flex flex-column align-items-center profile-main-container">
       <div className="headline">
         <h1>Welcome, {userDetails.name}</h1>
         {userDetails.venueManager && (
@@ -305,7 +305,7 @@ const ProfilePage = () => {
             <h2>Edit Avatar</h2>
             <input
               type="text"
-              className="form-control"
+              className="form-control mb-3"
               value={avatarUrl}
               onChange={(e) => setAvatarUrl(e.target.value)}
               placeholder="Enter new avatar URL"

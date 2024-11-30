@@ -49,3 +49,21 @@
 .hidden-booking {
   display: none;
 }
+.main-content {
+  flex-direction: column;
+}
+@media (min-width: 769px) {
+  .main-content {
+    flex-direction: row;
+    .left-side,
+    .right-side {
+      padding: 20px;
+    }
+    .left-side {
+      width: 30%;
+    }
+    .right-side {
+      width: 70%;
+    }
+  }
+}

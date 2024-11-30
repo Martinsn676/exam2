@@ -20,7 +20,24 @@ function VenuePage() {
   const [loading, setLoading] = useState(true); // State for loading status
   const [error, setError] = useState(null); // State for error handling
   const [signedInUser, setSignedInUser] = useState(false);
+  function usePcVersion() {
+    const [pcVersion, setPcVersion] = useState(window.innerWidth > 768);
 
+    useEffect(() => {
+      const handleResize = () => {
+        setPcVersion(window.innerWidth > 768);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize); // Cleanup on unmount
+    }, []);
+
+    return pcVersion;
+  }
+
+  // Usage
+  const pcVersion = usePcVersion();
+  // const [pcVersion, setPcVersion] = useState(true);
   const bookingSectionRef = useRef(null);
 
   const scrollToBooking = () => {
@@ -48,12 +65,14 @@ function VenuePage() {
   useEffect(() => {
     const fetchVenue = async () => {
       try {
-        const response = await fetch(`${baseUrl}${venuesUrl}/${id}`); // API call with id
+        const response = await fetch(
+          `${baseUrl}${venuesUrl}/${id}?_bookings=true`
+        ); // API call with id
         if (!response.ok) {
           throw new Error("Failed to fetch venue details");
         }
         const venue = await response.json();
-
+        console.log("venue.data.bookings", venue.data.bookings);
         // Extract bookings and convert them to taken dates
         const bookings = venue.data.bookings || [];
         const extractedDates = bookings.flatMap((booking) => {
@@ -162,15 +181,87 @@ function VenuePage() {
       </span>
     </div>
   );
+
   const descriptionString = (
     <div className="">
-      {venueDetails.description && venueDetails.description.length > 40
+      {venueDetails.description &&
+      venueDetails.description.length > 100 &&
+      !venueDetails.description.startsWith("Lorem")
         ? venueDetails.description
         : placeHolders.description}
     </div>
   );
   console.log("signedIn", signedInUser);
-  return (
+  console.log("takenDatessadsadad", takenDates);
+
+  return pcVersion ? (
+    <div className="d-flex">
+      <div className="col-4 p-4">
+        {/* Venue Media */}
+        <div className="my-4">
+          {venueDetails.media && venueDetails.media[0] ? (
+            <img
+              src={venueDetails.media[0].url}
+              alt={venueDetails.name}
+              style={{
+                width: "auto",
+                height: "auto",
+                maxHeight: "400px",
+                maxWidth: "100%",
+              }}
+              className="rounded-4 shadow"
+            />
+          ) : (
+            <div className="text-center p-4 border rounded">
+              <p>No image available</p>
+            </div>
+          )}
+        </div>
+        {/* Duration Selector */}
+        <div className="my-3">
+          <select
+            className="form-select"
+            onChange={handleDaysChange} // Update selectedDays on change
+          >
+            <option value="1">1 night</option>
+            <option value="2">2 nights</option>
+            <option value="3">3 nights</option>
+            <option value="4">4 nights</option>
+            <option value="5">5 nights</option>
+            <option value="6">6 nights</option>
+            <option value="7">7 nights</option>
+          </select>
+        </div>
+
+        {/* Booking Section with Calendar */}
+        <div ref={bookingSectionRef} className="my-4">
+          <h3 className="text-center">Check Availability</h3>
+          <AvailabilityCalendar
+            takenDates={takenDates}
+            days={selectedDays}
+            price={venueDetails.price}
+            id={venueDetails.id}
+            signedInUser={signedInUser}
+          />
+        </div>
+      </div>
+      <div className="col-8 p-4">
+        {/* Short Info */}
+        {/* Venue Name */}
+        <h1 className="text-start">{venueDetails.name}</h1>
+        <div className="d-flex flex-column justify-content-start my-3">
+          {shortInfoHtml}
+          <div>{addressString}</div>
+        </div>
+
+        {/* Description */}
+        <div className="my-4">
+          {/* <h5>Description</h5> */}
+          <p>{descriptionString}</p>
+        </div>
+      </div>
+    </div>
+  ) : (
     <div className="p-5">
       {/* Venue Name */}
       <h1 className="text-center">{venueDetails.name}</h1>
@@ -197,24 +288,18 @@ function VenuePage() {
         <div>{addressString}</div>
       </div>
 
-      {/* Address */}
-
+      {/* Book Room Button */}
+      <div className="d-flex justify-content-center align-items-center my-5">
+        <div className="flex-column text-center">
+          <button className=" cta-button" onClick={scrollToBooking}>
+            Book Room
+          </button>
+        </div>
+      </div>
       {/* Description */}
       <div className="my-4">
         {/* <h5>Description</h5> */}
         <p>{descriptionString}</p>
-      </div>
-
-      {/* Book Room Button */}
-      <div className="d-flex justify-content-center align-items-center my-5">
-        <div className="flex-column text-center">
-          <button
-            className="btn btn-primary cta-button"
-            onClick={scrollToBooking}
-          >
-            Book Room
-          </button>
-        </div>
       </div>
 
       {/* Duration Selector */}
@@ -228,6 +313,8 @@ function VenuePage() {
           <option value="3">3 nights</option>
           <option value="4">4 nights</option>
           <option value="5">5 nights</option>
+          <option value="6">6 nights</option>
+          <option value="7">7 nights</option>
         </select>
       </div>
 

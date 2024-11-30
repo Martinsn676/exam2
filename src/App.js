@@ -7,6 +7,7 @@ import "./styles/main.scss";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import VenueManagerPage from "./pages/VenueManagerPage";
+import ScrollToTop from "./components/scrollToTop";
 
 function App() {
   // Pass the search logic to the header
@@ -17,6 +18,8 @@ function App() {
 
   return (
     <Router>
+      {" "}
+      <ScrollToTop />
       {/* Header is now inside Router */}
       <Header onSearch={handleSearch} />
       <main>

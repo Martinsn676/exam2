@@ -12,7 +12,7 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
   const navigate = useNavigate();
   // Helper function to normalize dates to "YYYY-MM-DD"
   const normalizeDate = (date) => new Date(date).toISOString().split("T")[0];
-
+  console.log("takenDates", takenDates);
   useEffect(() => {
     const generateDateRange = () => {
       const start = new Date(); // Today
@@ -29,7 +29,7 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
     const calculateAvailableDates = () => {
       const allDates = generateDateRange();
       const takenDatesSet = new Set(takenDates.map(normalizeDate)); // Normalize taken dates
-
+      console.log("takenDatesSet", takenDatesSet);
       // Find dates that can accommodate the stay
       return allDates.filter((startDate) => {
         for (let i = 0; i < days; i++) {
@@ -137,6 +137,10 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
         tileDisabled={tileDisabled} // Disable unavailable dates
       />
       <style>{`
+.react-calendar{
+  border:3px solid #a0a096;
+margin:0 auto;
+}
         .available-date {
           background-color: #d4edda;
           font-weight: bold;
