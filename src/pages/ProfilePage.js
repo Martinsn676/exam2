@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { lsList } from "../utils/lists";
+import { lsList } from "../hooks/lists";
 import "./ProfilePage.scss";
 import editIcon from "../icons/Edit.png";
 import placeHolders from "../asserts/placeHolders";
+import normalizeDate from "../utils/dateUtils";
 
 const baseUrl = "https://v2.api.noroff.dev";
 
@@ -41,7 +42,7 @@ const ProfilePage = () => {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${userData.accessToken}`, // Add token for authorization
-              "X-Noroff-API-Key": "d6d527ca-f857-47b0-88e5-f8eb71230766",
+              "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
             },
           }
         );
@@ -92,7 +93,7 @@ const ProfilePage = () => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userDetails.accessToken}`, // Add token for authorization
-            "X-Noroff-API-Key": "d6d527ca-f857-47b0-88e5-f8eb71230766",
+            "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
           },
           body: JSON.stringify({
             avatar: {
@@ -130,19 +131,6 @@ const ProfilePage = () => {
   };
   const addNewVenue = () => {
     navigate("/manage-venue/new"); // Redirect to login page
-  };
-  const normalizeDate = (date) => {
-    // Split the input date into date and time parts
-    const [datePart] = date.split("T");
-
-    // Split the date part into year, month, and day
-    const [year, month, day] = datePart.split("-");
-
-    // Ensure the year has a valid prefix, assuming the year is two digits (e.g., "24" for 2024)
-    const fullYear = year.length === 2 ? `20${year}` : year;
-
-    // Return the correctly formatted ISO string
-    return `${day}.${month}.${fullYear}`;
   };
 
   if (!userDetails) {

@@ -8,7 +8,7 @@ import mapMarker from "../icons/MapIcon.png"; // Import the image
 import breakfastIcon from "../icons/Breakfast.png"; // Import the image
 
 import placeHolders from "../asserts/placeHolders";
-import { lsList } from "../utils/lists";
+import { lsList } from "../hooks/lists";
 // import ReservationCalendar from "../components/reservationCalendar";
 const baseUrl = "https://v2.api.noroff.dev/";
 const venuesUrl = "holidaze/venues";

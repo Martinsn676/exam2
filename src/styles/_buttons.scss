@@ -1,15 +1,3 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-.short-description,
-.lemon-font {
-  font-family: "Lemon", sans-serif !important;
-}
-.grey-text {
-  color: var(--grey-text);
-}
 .cta-button {
   background-color: var(--cta-background-color);
   border-radius: 20px 0 20px 0; /* Removed the incorrect '!' */

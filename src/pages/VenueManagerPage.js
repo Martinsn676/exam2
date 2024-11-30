@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./VenueManagerPage.scss"; // Assuming you have styles for this page
 import editIcon from "../icons/Edit.png"; // Replace with your edit icon path
-import { lsList } from "../utils/lists";
+import { lsList } from "../hooks/lists";
 import { useParams, useNavigate } from "react-router-dom"; // To get the 'id' from the URL
+import normalizeDate from "../utils/dateUtils";
 
 function CreateVenuePage() {
   const { id } = useParams(); // Get the venue id from the URL
@@ -132,7 +133,7 @@ function CreateVenuePage() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userLoginDetails.accessToken}`,
-          "X-Noroff-API-Key": "d6d527ca-f857-47b0-88e5-f8eb71230766",
+          "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
         },
       });
       if (!response.ok) {
@@ -183,7 +184,7 @@ function CreateVenuePage() {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userLoginDetails.accessToken}`, // Add token for authorization
-            "X-Noroff-API-Key": "d6d527ca-f857-47b0-88e5-f8eb71230766",
+            "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
           },
           body: JSON.stringify(venue),
         });
@@ -203,19 +204,6 @@ function CreateVenuePage() {
         console.warn(err);
       }
     }
-  };
-  const normalizeDate = (date) => {
-    // Split the input date into date and time parts
-    const [datePart] = date.split("T");
-
-    // Split the date part into year, month, and day
-    const [year, month, day] = datePart.split("-");
-
-    // Ensure the year has a valid prefix, assuming the year is two digits (e.g., "24" for 2024)
-    const fullYear = year.length === 2 ? `20${year}` : year;
-
-    // Return the correctly formatted ISO string
-    return `${day}.${month}.${fullYear}`;
   };
 
   console.log("venueDetails.bookings", venueDetails.bookings);

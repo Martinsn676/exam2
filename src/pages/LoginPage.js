@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { lsList } from "../utils/lists";
+import { lsList } from "../hooks/lists";
 const baseUrl = "https://v2.api.noroff.dev";
 
 function LoginPage() {

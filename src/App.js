@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import VenuePage from "./pages/VenuePage";
-import Header from "./components/header";
+import Header from "./components/Header/Header";
 import "./styles/main.scss";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";

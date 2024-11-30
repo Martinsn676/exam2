@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./header.scss";
-import Logo from "../images/logo.png";
-import userIcon from "../icons/User.png";
+import "./Header.scss";
+import Logo from "../../images/logo.png";
+import userIcon from "../../icons/User.png";
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState("");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar"; // Calendar component
 import "react-calendar/dist/Calendar.css"; // Calendar styles
-import { lsList } from "../utils/lists";
+import { lsList } from "../hooks/lists";
 const baseUrl = "https://v2.api.noroff.dev";
 
 function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
@@ -111,7 +111,7 @@ function AvailabilityCalendar({ takenDates, days, price, id, signedInUser }) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userLoginData.accessToken}`, // Add token for authorization
-          "X-Noroff-API-Key": "d6d527ca-f857-47b0-88e5-f8eb71230766",
+          "X-Noroff-API-Key": process.env.REACT_APP_apiKey,
         },
         body: JSON.stringify(body),
       });
