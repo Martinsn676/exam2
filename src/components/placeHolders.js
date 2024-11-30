@@ -1,5 +1,7 @@
+//For use when information is missing, that should have been there, for a cleaner look
+
 const placeHolders = {
-  address: "In the shadows",
+  address: "Second street 44",
   city: "Oslo",
   country: "Norway",
 

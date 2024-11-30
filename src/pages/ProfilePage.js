@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { lsList } from "../hooks/lists";
 import "./ProfilePage.scss";
 import editIcon from "../icons/Edit.png";
-import placeHolders from "../asserts/placeHolders";
+import placeHolders from "../components/placeHolders";
 import normalizeDate from "../utils/dateUtils";
 
 const baseUrl = "https://v2.api.noroff.dev";
@@ -109,10 +109,11 @@ const ProfilePage = () => {
   const addNewVenue = () => {
     navigate("/manage-venue/new");
   };
-
+  console.log(bookings);
   // Render loading state or content
   // if (!userDetails) return <p>Loading...</p>;
   if (!userDetails) return <p></p>;
+  console.log(venues);
   return (
     <div className="container mt-5 d-flex flex-column align-items-center profile-main-container">
       <div className="headline">
@@ -172,9 +173,17 @@ const ProfilePage = () => {
                     </div>
                     <div className="venue-details">
                       <h5>{venue.name}</h5>
-                      <p>
-                        <strong>Price:</strong> ${venue.price} / night
-                      </p>
+                      <ul className="list-unstyled">
+                        <li>
+                          <strong>Price:</strong> ${venue.price} / night
+                        </li>
+                        <li>
+                          <strong>Address:</strong>
+                          {` ${
+                            venue.location.address || placeHolders.address
+                          }, ${venue.location.city || placeHolders.city}`}
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </Link>
@@ -214,12 +223,24 @@ const ProfilePage = () => {
                     </div>
                     <div className="booking-details">
                       <h5>{booking.venue?.name}</h5>
-                      <p>
-                        <strong>From:</strong> {normalizeDate(booking.dateFrom)}
-                      </p>
-                      <p>
-                        <strong>To:</strong> {normalizeDate(booking.dateTo)}
-                      </p>
+                      <ul className="list-unstyled">
+                        <li>
+                          <strong>From:</strong>{" "}
+                          {normalizeDate(booking.dateFrom)}
+                        </li>
+                        <li>
+                          <strong>To:</strong> {normalizeDate(booking.dateTo)}
+                        </li>
+                        <li>
+                          <strong>Address:</strong>
+                          {` ${
+                            booking.venue.location.address ||
+                            placeHolders.address
+                          }, ${
+                            booking.venue.location.city || placeHolders.city
+                          }`}
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </Link>

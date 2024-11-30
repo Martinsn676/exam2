@@ -6,9 +6,9 @@ import petsIcon from "../icons/Pets.png";
 import parkingIcon from "../icons/Parking.png";
 import mapMarker from "../icons/MapIcon.png";
 import breakfastIcon from "../icons/Breakfast.png";
-import placeHolders from "../asserts/placeHolders";
+import placeHolders from "../components/placeHolders";
 import { lsList } from "../hooks/lists";
-import "./VenuePage.scss";
+
 const baseUrl = "https://v2.api.noroff.dev/";
 const venuesUrl = "holidaze/venues";
 
@@ -83,7 +83,6 @@ function VenuePage() {
         setTakenDates(extractedDates);
         setVenueDetails(venue.data);
       } catch (err) {
-        console.error(err.message);
         setError(err.message);
       } finally {
         setLoading(false); // Stop loading spinner
@@ -172,7 +171,9 @@ function VenuePage() {
 
   const descriptionString = (
     <p>
-      {venueDetails.description && venueDetails.description.length > 100
+      {venueDetails.description &&
+      venueDetails.description.length > 100 &&
+      !venueDetails.description.toLowerCase().startsWith("lorem")
         ? venueDetails.description
         : placeHolders.description}
     </p>
@@ -228,7 +229,9 @@ function VenuePage() {
     </div>
   ) : (
     <div className="p-5">
-      <h1 className="text-center">{venueDetails.name}</h1>
+      <div className="w-100 text-break ">
+        <h1 className="card-title">{venueDetails.name}</h1>
+      </div>
       <div className="my-4">
         {venueDetails.media?.[0] ? (
           <img

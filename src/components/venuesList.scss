@@ -7,7 +7,7 @@
       min-height: 200px;
     }
     .venue-image {
-      max-height: 200px; /* Limit the height to prevent overly tall images */
+      max-height: 200px;
     }
   }
 }
@@ -27,7 +27,7 @@
   }
   .card {
     .venue-image {
-      max-height: 350px; /* Limit the height to prevent overly tall images */
+      max-height: 350px;
     }
   }
 }
@@ -43,9 +43,9 @@
     min-height: 490px;
     .venue-image-container {
       .venue-image {
-        width: 100%; /* Ensure the image spans the full width of its container */
-        object-fit: cover; /* Ensures the image covers the container without distortion */
-        border-radius: 20px 20px 0 0; /* Optional: Add some rounding to soften the edges */
+        width: 100%;
+        object-fit: cover;
+        border-radius: 20px 20px 0 0;
       }
     }
     // height: 500px !important;

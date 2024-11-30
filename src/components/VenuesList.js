@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useDocumentTitle from "../hooks/useDocumentTitle";
-import placeHolders from "../asserts/placeHolders";
+import placeHolders from "./placeHolders";
 import "./venuesList.scss";
 import wifiIcon from "../icons/Wi-Fi.png";
 import petsIcon from "../icons/Pets.png";
