@@ -15,6 +15,7 @@ function VenuesList() {
   const [venues, setVenues] = useState([]); // State to store venues
   const [loading, setLoading] = useState(true); // State for loading status
   const [error, setError] = useState(null); // State for error handling
+  const [search, setSearch] = useState("");
   const location = useLocation(); // To access query parameters
   const navigate = useNavigate();
 
@@ -22,10 +23,14 @@ function VenuesList() {
 
   useEffect(() => {
     const fetchVenues = async () => {
+      console.log("search", search);
+      const endUrl =
+        search && search.length > 0
+          ? `/search?q=${search}&_bookings=true&owner=true`
+          : "/?_bookings=true&owner=true";
       try {
-        const response = await fetch(
-          baseUrl + venuesUrl + "/?_bookings=true&owner=true"
-        );
+        console.log(baseUrl + venuesUrl + endUrl);
+        const response = await fetch(baseUrl + venuesUrl + endUrl);
         if (!response.ok) {
           throw new Error("Failed to fetch venues");
         }
@@ -39,7 +44,7 @@ function VenuesList() {
     };
 
     fetchVenues();
-  }, []);
+  }, [search]);
 
   // Get the search term from the query parameter
   const queryParams = new URLSearchParams(location.search);
@@ -47,15 +52,14 @@ function VenuesList() {
 
   useEffect(() => {
     if (searchTerm.length > 0) {
+      setSearch(searchTerm);
       document.title = `Search - Holidaze`;
     } else {
       document.title = `Home - Holidaze`;
+      setSearch(false);
     }
   }, [searchTerm]);
   // Filter venues based on the search term
-  const filteredVenues = venues.filter((venueDetails) =>
-    venueDetails.name.toLowerCase().includes(searchTerm)
-  );
 
   if (loading) return <p>Loading venues...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -96,7 +100,7 @@ function VenuesList() {
         {searchTerm ? `Search Results for "${searchTerm}"` : "Available Venues"}
       </h1>
 
-      {filteredVenues.length === 0 ? (
+      {venues.length === 0 ? (
         // Display a "No Results" message
         <div className="text-center">
           <h2>No Results Found</h2>
@@ -110,7 +114,7 @@ function VenuesList() {
         </div>
       ) : (
         <div className="row">
-          {filteredVenues.map((venueDetails) => {
+          {venues.map((venueDetails) => {
             // Generate short info for each venue
             const shortInfoHtml = Object.entries(venueDetails.meta || {}).map(
               ([key, value]) => {
