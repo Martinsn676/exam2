@@ -1,46 +1,45 @@
-# Exam2
+# Exam 2 - Hotel Booking React App
 
-A React-based project designed to showcase modern web development techniques, integrating various libraries like Bootstrap for styling, React Router for routing, and React Calendar for interactive features.
+This is a React-based hotel booking application built as part of Exam 2. It allows users to browse venues, view details, make bookings, and manage venues if they are venue managers.
 
 ## Table of Contents
 
-- [Overview](#overview)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-  - [Installation](#installation)
-  - [Running the Project](#running-the-project)
+- [Setup and Installation](#setup-and-installation)
 - [Scripts](#scripts)
-- [Dependencies](#dependencies)
 - [Folder Structure](#folder-structure)
+- [Style Guide](#style-guide)
+- [Contributing](#contributing)
 - [License](#license)
+
 
 ---
 
-## Overview
-
-This project demonstrates a fully functional React application using modern tools and libraries. It's built to handle routing, calendar functionalities, and styling with minimal dependencies.
-
-## Features
-
-- Responsive design using Bootstrap and custom SCSS.
-- Interactive calendar using `react-calendar`.
-- Navigation and routing with `react-router-dom`.
-- Modular and reusable components.
-- Ready for deployment with Netlify or similar platforms.
-
 ## Technologies Used
 
-- **React** - A JavaScript library for building user interfaces.
-- **Bootstrap** - A CSS framework for responsive design.
-- **React Calendar** - For date-picking functionalities.
-- **SASS** - A CSS preprocessor for modular styles.
-- **React Router** - For declarative routing in React.
+- **React**: Front-end framework.
+- **React Router DOM**: For navigation.
+- **React Bootstrap**: Pre-styled components.
+- **Sass**: For styling.
+- **React Calendar**: Interactive date selection.
+- **Bootstrap**: Grid and UI utilities.
+- **Netlify**: Deployment platform.
+- **Node.js**: For managing dependencies.
 
-## Getting Started
+---
 
-### Installation
+## Setup and Installation
+Open the terminal and write these:
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/exam2.git
+   git clone https://github.com/<your-username>/exam2.git
+2. Clone the repository:
+   cd exam2
+3. Clone the repository:
+   npm install
+4. Start the development server:
+   npm start
+   
+##Deployment
+The app is deployed on Netlify. Visit the live site [Here](https://rococo-crisp-371f09.netlify.app/)
