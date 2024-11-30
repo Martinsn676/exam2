@@ -1,21 +1,26 @@
-.card-address {
-  margin: -10px 0 0 30px;
-}
-.group-grey-offshift .grey-text {
-  margin: -5px 0 0 30px;
-}
-.card {
-  height: 550px !important;
-  border-radius: 20px !important;
-}
-.card-cta {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-.venue-image {
-  width: 100%; /* Ensure the image spans the full width of its container */
-  max-height: 350px; /* Limit the height to prevent overly tall images */
-  object-fit: cover; /* Ensures the image covers the container without distortion */
-  border-radius: 20px 20px 0 0; /* Optional: Add some rounding to soften the edges */
+.venue-listing {
+  min-width: 350px;
+
+  .venue-image {
+    width: 100%; /* Ensure the image spans the full width of its container */
+    max-height: 300px; /* Limit the height to prevent overly tall images */
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+    border-radius: 20px 20px 0 0; /* Optional: Add some rounding to soften the edges */
+  }
+  .card-address {
+    margin: -10px 0 0 30px;
+  }
+  .group-grey-offshift .grey-text {
+    margin: -5px 0 0 30px;
+  }
+  .card {
+    height: 500px !important;
+    border-radius: 20px !important;
+    padding-bottom: 30px !important;
+  }
+  .card-cta {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
 }

@@ -227,7 +227,10 @@ function CreateVenuePage() {
       <h1 className="text-center">
         {editMode ? `Viewing ${name || "Venue"}` : "Create a New Venue"}
       </h1>
-      <div className="d-flex main-content">
+      <div
+        className="d-flex main-content"
+        data-mode={editMode ? "edit" : "create"}
+      >
         <div className="left-side">
           {editMode && (
             <div className="mt-4 text-center">

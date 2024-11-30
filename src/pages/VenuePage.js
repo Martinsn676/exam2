@@ -41,7 +41,15 @@ function VenuePage() {
   const bookingSectionRef = useRef(null);
 
   const scrollToBooking = () => {
-    bookingSectionRef.current.scrollIntoView({ behavior: "smooth" });
+    const offset = 100; // Adjust this value to set the Y offset
+    const elementPosition =
+      bookingSectionRef.current.getBoundingClientRect().top;
+    const offsetPosition = elementPosition - offset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
   };
   const [selectedDays, setSelectedDays] = useState(1); // Default value for days
 
@@ -218,7 +226,7 @@ function VenuePage() {
           )}
         </div>
         {/* Duration Selector */}
-        <div className="my-3">
+        <div className="my-3 col-6">
           <select
             className="form-select"
             onChange={handleDaysChange} // Update selectedDays on change
@@ -301,33 +309,34 @@ function VenuePage() {
         {/* <h5>Description</h5> */}
         <p>{descriptionString}</p>
       </div>
+      <div ref={bookingSectionRef}>
+        {/* Duration Selector */}
+        <div className="my-3">
+          <select
+            className="form-select"
+            onChange={handleDaysChange} // Update selectedDays on change
+          >
+            <option value="1">1 night</option>
+            <option value="2">2 nights</option>
+            <option value="3">3 nights</option>
+            <option value="4">4 nights</option>
+            <option value="5">5 nights</option>
+            <option value="6">6 nights</option>
+            <option value="7">7 nights</option>
+          </select>
+        </div>
 
-      {/* Duration Selector */}
-      <div className="my-3">
-        <select
-          className="form-select"
-          onChange={handleDaysChange} // Update selectedDays on change
-        >
-          <option value="1">1 night</option>
-          <option value="2">2 nights</option>
-          <option value="3">3 nights</option>
-          <option value="4">4 nights</option>
-          <option value="5">5 nights</option>
-          <option value="6">6 nights</option>
-          <option value="7">7 nights</option>
-        </select>
-      </div>
-
-      {/* Booking Section with Calendar */}
-      <div ref={bookingSectionRef} className="my-4">
-        <h3 className="text-center">Check Availability</h3>
-        <AvailabilityCalendar
-          takenDates={takenDates}
-          days={selectedDays}
-          price={venueDetails.price}
-          id={venueDetails.id}
-          signedInUser={signedInUser}
-        />
+        {/* Booking Section with Calendar */}
+        <div ref={bookingSectionRef} className="my-4">
+          <h3 className="text-center">Check Availability</h3>
+          <AvailabilityCalendar
+            takenDates={takenDates}
+            days={selectedDays}
+            price={venueDetails.price}
+            id={venueDetails.id}
+            signedInUser={signedInUser}
+          />
+        </div>
       </div>
     </div>
   );

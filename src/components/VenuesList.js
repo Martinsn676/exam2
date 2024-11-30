@@ -134,7 +134,7 @@ function VenuesList() {
 
             return (
               <div
-                className="col-md-4 mb-4"
+                className="col-md-4 mb-4 venue-listing"
                 key={venueDetails.id}
                 onClick={() => navigate(`/venue/${venueDetails.id}`)}
                 style={{ cursor: "pointer" }}

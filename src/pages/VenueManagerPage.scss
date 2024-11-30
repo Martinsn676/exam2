@@ -59,11 +59,20 @@
     .right-side {
       padding: 20px;
     }
-    .left-side {
-      width: 30%;
+    &[data-mode="edit"] {
+      .left-side {
+        width: 30%;
+      }
+      .right-side {
+        width: 70%;
+      }
     }
-    .right-side {
-      width: 70%;
+    &[data-mode="create"] {
+      .right-side {
+        width: 700px;
+
+        margin: 0 auto;
+      }
     }
   }
 }
