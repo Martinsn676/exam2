@@ -2,21 +2,20 @@
 
 ![image](https://github.com/Martinsn676/exam2/blob/main/hotel%20screenshot.PNG)
 
-A simple overview of the use/purpose of the project.
+A hotel reservation page made with a lackluster backend to show what I have "learned" after 2 whole years of school. You can only filter by search and not even sort by date, price or title. The design is made to seem modern and with the same design between the app and website. I was not getting any visual direction by the useless teachers and this was made quickly as it was a low paid job done as charity, when the awful truth was that I paid them to be getting this task.
 
 ## Description
 
-Add a more detailed description of what your project entails and set out to do.
+Make a simple app for customers to reserve a venue, which apperantly means hotel according to them
 
-You can add some bullet points if you'd like to:
-
-- List item 1
-- List item 2
-- List item 3
+- Clean ui
+- Useful info at card
+- Quick overview of venue at it's page
+- Calendar for easy view of available dates
+- User login page shwoing upcoming venues
+- Manager login page where they see their venues, can check the upcoming reservations and create new ones
 
 ## Built With
-
-You can list a the tech stack that you've used over here
 
 - [React.js](https://reactjs.org/)
 - [Bootstrap](https://getbootstrap.com)
@@ -25,12 +24,11 @@ You can list a the tech stack that you've used over here
 
 ### Installing
 
-This is where you list how to get the project started. It typically just includes telling a person to clone the repo and then to install the dependencies e.g.
 
 1. Clone the repo:
 
 ```bash
-git clone git@github.com:NoroffFEU/portfolio-1-example.git
+git clone https://github.com/Martinsn676/exam2.git
 ```
 
 2. Install the dependencies:
@@ -40,8 +38,6 @@ npm install
 ```
 
 ### Running
-
-Here is where you detail how to run the app. It typically involves the commands you'd need to run to start the project e.g.
 
 To run the app, run the following commands:
 
@@ -55,16 +51,5 @@ Here you can detail any information you want to provide regarding contributing t
 
 ## Contact
 
-This is where you can leave your social links for people to contact you, such as a LinkedIn profile or Twitter link e.g.
+[My LinkedIn page](https://www.linkedin.com/in/martin-sk%C3%A5la-nyg%C3%A5rd-0a6120263)
 
-[My Twitter page](www.twitter.com)
-
-[My LinkedIn page](www.linkedin.com)
-
-## License
-
-You can link to your license file here if you're using one, or mention what license the codebase falls under. If you're unsure then you can simply delete this section.
-
-## Acknowledgments
-
-This is where you can add any acknowledgements if you'd like, such as to people who have helped you or any code snippets you'd like to mention. You can delete this section if you don't have any acknowledgements to make.
