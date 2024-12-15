@@ -1,45 +1,70 @@
-# Exam 2 - Hotel Booking React App
+# Your project title
 
-This is a React-based hotel booking application built as part of Exam 2. It allows users to browse venues, view details, make bookings, and manage venues if they are venue managers.
+![image](https://user-images.githubusercontent.com/52622303/164316813-4b12d99f-aeb7-4069-85cf-e72b3a50ac99.png)
 
-## Table of Contents
+A simple overview of the use/purpose of the project.
 
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Setup and Installation](#setup-and-installation)
-- [Scripts](#scripts)
-- [Folder Structure](#folder-structure)
-- [Style Guide](#style-guide)
-- [Contributing](#contributing)
-- [License](#license)
+## Description
 
+Add a more detailed description of what your project entails and set out to do.
 
----
+You can add some bullet points if you'd like to:
 
-## Technologies Used
+- List item 1
+- List item 2
+- List item 3
 
-- **React**: Front-end framework.
-- **React Router DOM**: For navigation.
-- **React Bootstrap**: Pre-styled components.
-- **Sass**: For styling.
-- **React Calendar**: Interactive date selection.
-- **Bootstrap**: Grid and UI utilities.
-- **Netlify**: Deployment platform.
-- **Node.js**: For managing dependencies.
+## Built With
 
----
+You can list a the tech stack that you've used over here
 
-## Setup and Installation
-Open the terminal and write these:
+- [React.js](https://reactjs.org/)
+- [Bootstrap](https://getbootstrap.com)
 
-1. Clone the repository:
-   git clone https://github.com/<your-username>/exam2.git
-2. Clone the repository:
-   cd exam2
-3. Clone the repository:
-   npm install
-4. Start the development server:
-   npm start
-   
-##Deployment
-The app is deployed on Netlify. Visit the live site [Here](https://rococo-crisp-371f09.netlify.app/)
+## Getting Started
+
+### Installing
+
+This is where you list how to get the project started. It typically just includes telling a person to clone the repo and then to install the dependencies e.g.
+
+1. Clone the repo:
+
+```bash
+git clone git@github.com:NoroffFEU/portfolio-1-example.git
+```
+
+2. Install the dependencies:
+
+```
+npm install
+```
+
+### Running
+
+Here is where you detail how to run the app. It typically involves the commands you'd need to run to start the project e.g.
+
+To run the app, run the following commands:
+
+```bash
+npm run start
+```
+
+## Contributing
+
+Here you can detail any information you want to provide regarding contributing to the project. For big projects you will usually have a separate `CONTRIBUTING.md` and link to it, but for smaller projects you can simply include instructions here. These instructions can simply detail the process you want a person to take, such as to make sure to open a pull request so code can be reviewed.
+
+## Contact
+
+This is where you can leave your social links for people to contact you, such as a LinkedIn profile or Twitter link e.g.
+
+[My Twitter page](www.twitter.com)
+
+[My LinkedIn page](www.linkedin.com)
+
+## License
+
+You can link to your license file here if you're using one, or mention what license the codebase falls under. If you're unsure then you can simply delete this section.
+
+## Acknowledgments
+
+This is where you can add any acknowledgements if you'd like, such as to people who have helped you or any code snippets you'd like to mention. You can delete this section if you don't have any acknowledgements to make.
