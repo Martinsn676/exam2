@@ -1,4 +1,4 @@
-# Your project title
+# Hotel page
 
 ![image](https://github.com/Martinsn676/exam2/blob/main/hotel%20screenshot.PNG)
 
